@@ -1,35 +1,46 @@
 [
-  {
-    "id": "evt001",
-    "title": "JetSet Sunset",
-    "date": "2025-06-14",
-    "location": "Saint-Tropez",
-    "description": "Sunset & deep house sur le pont — couchers de soleil magiques face à la mer Méditerranée.",
-    "image": "/images/bg-events.jpg",
-    "price": 45,
-    "stripeLink": "https://buy.stripe.com/test_fictif_001",
-    "featured": false
-  },
-  {
-    "id": "evt002",
-    "title": "JetSet VIP Monaco",
-    "date": "2025-06-28",
-    "location": "Monaco",
-    "description": "Soirée privée, champagne & DJ set — l'élite de la Côte d'Azur réunie en mer.",
-    "image": "/images/bg-nights.jpg",
-    "price": 95,
-    "stripeLink": "https://buy.stripe.com/test_fictif_002",
-    "featured": true
-  },
-  {
-    "id": "evt003",
-    "title": "JetSet Beach White",
-    "date": "2025-09-13",
-    "location": "Cannes",
-    "description": "All white party sur la plage — tenue blanche obligatoire, ambiance bohème chic.",
-    "image": "/images/bg-testimonials.jpg",
-    "price": 35,
-    "stripeLink": "https://buy.stripe.com/test_fictif_003",
-    "featured": false
-  }
+    {
+        "id": "evt001",
+        "title": "JetSet Sunset",
+        "date": "2025-06-14",
+        "location": "Saint-Tropez",
+        "description": "Sunset & deep house sur le pont — couchers de soleil magiques face à la mer Méditerranée.",
+        "image": "/images/bg-events.jpg",
+        "price": 45,
+        "stripeLink": "https://buy.stripe.com/test_fictif_001",
+        "featured": false
+    },
+    {
+        "id": "evt002",
+        "title": "JetSet VIP Monaco",
+        "date": "2025-06-28",
+        "location": "Monaco",
+        "description": "Soirée privée, champagne & DJ set — l'élite de la Côte d'Azur réunie en mer.",
+        "image": "/images/bg-nights.jpg",
+        "price": 95,
+        "stripeLink": "https://buy.stripe.com/test_fictif_002",
+        "featured": true
+    },
+    {
+        "id": "evt003",
+        "title": "JetSet Beach White",
+        "date": "2025-09-13",
+        "location": "Cannes",
+        "description": "All white party sur la plage — tenue blanche obligatoire, ambiance bohème chic.",
+        "image": "/images/bg-testimonials.jpg",
+        "price": 35,
+        "stripeLink": "https://buy.stripe.com/test_fictif_003",
+        "featured": false
+    },
+    {
+        "id": "evt69fa6325ef3ca4.10701044",
+        "title": "Beach party",
+        "date": "2026-05-08",
+        "location": "vallauris",
+        "description": "DJ PARTY PLAGE TEST",
+        "image": "/jetsetboat/images/events/event_69fa6325eee5b2.43264593.jpg",
+        "price": 15,
+        "stripeLink": "https://buy.stripe.com/test_fictif_004",
+        "featured": false
+    }
 ]
