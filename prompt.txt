@@ -1,17 +1,35 @@
-Fix two issues:
+Redesign the site background to reduce eye strain and add 
+visual depth. Currently everything is flat white #FFFAF5 
+which is too harsh.
 
-1. MENTIONS LEGALES page - fix spacing:
-In mentions-legales.astro reduce the huge gaps between sections.
-Max margin between sections: 2rem.
-Add a light border-bottom on each section for separation.
-The page should feel compact and readable like a document.
+Apply these changes across all sections:
 
-2. CONTACT background image - it's still not visible enough:
-In Contact.astro change the ::before pseudo-element:
-- opacity: 0.22 → increase to 0.35
-- Add a very subtle overlay on top so text stays readable:
-  after the ::before, add a ::after with 
-  background: rgba(255,250,245,0.45) to soften the image
-  without hiding it completely
-- The image contact-bg.jpg should be clearly visible 
-  as a real background, not just a hint
+1. GLOBAL - alternate section backgrounds:
+- Hero: keep photo background (unchanged)
+- Notre Univers: background #FFF8F0 (warm sand, very subtle)
+- Events: add a very subtle texture using CSS:
+  background: #FFFAF5 with a radial-gradient overlay
+  radial-gradient(ellipse at 20% 50%, rgba(244,162,97,0.06) 0%, transparent 60%),
+  radial-gradient(ellipse at 80% 20%, rgba(255,107,53,0.04) 0%, transparent 50%)
+- Testimonials: background #F7F3EE (warm beige, distinct from white)
+- Ambiance: keep photo (unchanged)
+- Contact: keep photo background (unchanged)
+- Footer: keep #1A3A5C (unchanged)
+
+2. ADD subtle decorative elements:
+- A very faint orange blob (opacity 3%) top-right of Events section
+- A very faint navy blob (opacity 3%) bottom-left of Testimonials
+
+3. TYPOGRAPHY contrast improvement:
+- All body text: color #2D2D2D instead of #111827 
+  (slightly softer than pure black)
+- Section subtitles: color #6B6B6B instead of #6B7280
+- Increase line-height on body text to 1.8
+
+4. MENTIONS LEGALES and POLITIQUE pages:
+- Background #FFF8F3 instead of white
+- Body text #2D2D2D
+- Section titles color var(--navy)
+- Add left border accent orange on each section:
+  border-left: 3px solid var(--orange), padding-left: 1.5rem
+- Reduce gaps between sections to 2.5rem max

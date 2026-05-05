@@ -9,8 +9,8 @@
   --coral:   #F4A261;
   --white:   #FFFFFF;
   --cream:   #FFFAF5;
-  --dark:    #111827;
-  --grey:    #6B7280;
+  --dark:    #2D2D2D;
+  --grey:    #6B6B6B;
   --light:   #FFFAF5;
   --border:  #EAE4DC;
 
@@ -42,7 +42,7 @@ body {
   font-family: var(--font-body);
   color: var(--dark);
   background: var(--cream);
-  line-height: 1.6;
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
 
