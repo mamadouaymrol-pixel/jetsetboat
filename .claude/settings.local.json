@@ -18,7 +18,9 @@
       "PowerShell(Get-Command *)",
       "PowerShell(winget install *)",
       "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; git remote -v)",
-      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Get-ChildItem public\\\\images\\\\)"
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Get-ChildItem public\\\\images\\\\)",
+      "PowerShell(git *)",
+      "PowerShell(git push *)"
     ]
   },
   "enabledMcpjsonServers": [
