@@ -3,9 +3,21 @@ session_start();
 define('ADMIN_GUARD', true);
 require_once __DIR__ . '/config.php';
 
+// ── Portable base-path detection ──────────────────────────────────────────────
+// Works whether the project lives at the domain root (OVH) or in a subfolder
+// (XAMPP: localhost/jetsetboat/). Derives paths purely from the current request
+// so no manual configuration is needed.
+$_scriptName = $_SERVER['SCRIPT_NAME'] ?? '/admin/index.php';
+$_adminDir   = rtrim(dirname($_scriptName), '/\\');          // e.g. /admin  or /jetsetboat/admin
+$_siteDir    = rtrim(dirname($_adminDir),   '/\\');          // e.g. ''      or /jetsetboat
+
+define('ADMIN_BASE', $_adminDir . '/');                       // /admin/  or /jetsetboat/admin/
+define('SITE_BASE',  ($_siteDir === '' || $_siteDir === '.') ? '/' : $_siteDir . '/');
+// ──────────────────────────────────────────────────────────────────────────────
+
 $eventsFile = __DIR__ . '/../events.json';
 $uploadDir  = __DIR__ . '/../images/events/';
-$uploadBase = '/images/events/';
+$uploadBase = SITE_BASE . 'images/events/';   // /images/events/ or /jetsetboat/images/events/
 
 /* ── Helpers ── */
 
@@ -29,7 +41,7 @@ function isLoggedIn(): bool {
 }
 
 function requireLogin(): void {
-    if (!isLoggedIn()) { header('Location: /admin/'); exit; }
+    if (!isLoggedIn()) { header('Location: ' . ADMIN_BASE); exit; }
 }
 
 function redirect(string $url): void {
@@ -54,7 +66,7 @@ function h(string $s): string {
 
 if (isset($_GET['logout'])) {
     session_destroy();
-    redirect('/admin/');
+    redirect(ADMIN_BASE);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -67,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (hash_equals(ADMIN_USER, $user) && hash_equals(ADMIN_PASS, $pass)) {
             session_regenerate_id(true);
             $_SESSION['admin_logged_in'] = true;
-            redirect('/admin/');
+            redirect(ADMIN_BASE);
         } else {
             setFlash('error', 'Identifiants incorrects. Vérifiez votre nom d\'utilisateur et mot de passe.');
-            redirect('/admin/');
+            redirect(ADMIN_BASE);
         }
     }
 
@@ -89,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$title || !$date || !$location || !$desc || !$price || !$stripe) {
             setFlash('error', 'Tous les champs obligatoires (*) doivent être remplis.');
-            redirect('/admin/?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
+            redirect(ADMIN_BASE . '?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
         }
 
         $events = readEvents();
@@ -104,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /* Handle file upload */
         if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            global $uploadDir, $uploadBase;
             $file  = $_FILES['image'];
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime  = finfo_file($finfo, $file['tmp_name']);
@@ -118,11 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!isset($allowedMimes[$mime])) {
                 setFlash('error', 'Format d\'image non autorisé. Utilisez JPG, PNG ou WebP.');
-                redirect('/admin/?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
+                redirect(ADMIN_BASE . '?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
             }
             if ($file['size'] > 5 * 1024 * 1024) {
                 setFlash('error', 'L\'image dépasse 5 MB.');
-                redirect('/admin/?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
+                redirect(ADMIN_BASE . '?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
             }
 
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
@@ -132,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
                 setFlash('error', 'Impossible d\'enregistrer l\'image. Vérifiez les permissions du dossier images/events/.');
-                redirect('/admin/?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
+                redirect(ADMIN_BASE . '?page=' . ($isNew ? 'new' : 'edit&id=' . urlencode($id)));
             }
             $imagePath = $uploadBase . $filename;
 
@@ -164,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         writeEvents($events);
         setFlash('success', $isNew ? 'Événement créé avec succès !' : 'Événement mis à jour !');
-        redirect('/admin/');
+        redirect(ADMIN_BASE);
     }
 
     /* Delete event */
@@ -177,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             writeEvents($events);
             setFlash('success', 'Événement supprimé.');
         }
-        redirect('/admin/');
+        redirect(ADMIN_BASE);
     }
 }
 
@@ -201,7 +214,7 @@ if ($page === 'edit' && $editId) {
     }
     if (!$editEvent) {
         setFlash('error', 'Événement introuvable.');
-        redirect('/admin/');
+        redirect(ADMIN_BASE);
     }
 }
 
@@ -323,7 +336,7 @@ function renderLogin(?array $flash): void { ?>
       <div class="alert alert-<?= h($flash['type']) ?>"><?= h($flash['msg']) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="/admin/">
+    <form method="POST" action="">
       <input type="hidden" name="action" value="login">
       <div class="fg-group">
         <label for="username">Nom d'utilisateur</label>
@@ -355,10 +368,10 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
 <header class="ah">
   <div class="ah-logo">JetSet<span>Boat</span> <span style="font-weight:400;opacity:.6;font-size:.9rem">Admin</span></div>
   <nav class="ah-nav">
-    <a href="/admin/" class="btn btn-ghost">Événements</a>
-    <a href="/admin/?page=new" class="btn btn-orange">+ Nouvel événement</a>
-    <a href="/" class="btn btn-ghost" target="_blank">Voir le site ↗</a>
-    <a href="/admin/?logout=1" class="btn btn-ghost">Déconnexion</a>
+    <a href="?" class="btn btn-ghost">Événements</a>
+    <a href="?page=new" class="btn btn-orange">+ Nouvel événement</a>
+    <a href="<?= h(SITE_BASE) ?>" class="btn btn-ghost" target="_blank">Voir le site ↗</a>
+    <a href="?logout=1" class="btn btn-ghost">Déconnexion</a>
   </nav>
 </header>
 
@@ -372,14 +385,14 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
     <!-- ─── Events list ─── -->
     <div class="ph">
       <h1>Événements (<?= count($events) ?>)</h1>
-      <a href="/admin/?page=new" class="btn btn-orange">+ Nouvel événement</a>
+      <a href="?page=new" class="btn btn-orange">+ Nouvel événement</a>
     </div>
 
     <?php if (empty($events)): ?>
       <div class="empty">
         <div class="empty-ico">🌊</div>
         <p style="margin-bottom:1rem">Aucun événement pour le moment.</p>
-        <a href="/admin/?page=new" style="color:#FF6B35;font-weight:600">Créer le premier événement →</a>
+        <a href="?page=new" style="color:#FF6B35;font-weight:600">Créer le premier événement →</a>
       </div>
 
     <?php else: ?>
@@ -408,7 +421,7 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
             </div>
 
             <div class="ev-actions">
-              <a href="/admin/?page=edit&id=<?= urlencode($ev['id']) ?>" class="btn btn-dark btn-sm">Modifier</a>
+              <a href="?page=edit&id=<?= urlencode($ev['id']) ?>" class="btn btn-dark btn-sm">Modifier</a>
               <button type="button" class="btn btn-red btn-sm"
                       data-id="<?= h($ev['id']) ?>"
                       data-title="<?= h($ev['title']) ?>"
@@ -423,11 +436,11 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
     <!-- ─── Event form ─── -->
     <div class="ph">
       <h1><?= $page === 'new' ? 'Nouvel événement' : 'Modifier l\'événement' ?></h1>
-      <a href="/admin/" class="btn btn-gray">← Retour</a>
+      <a href="?" class="btn btn-gray">← Retour</a>
     </div>
 
     <div class="fc">
-      <form method="POST" action="/admin/" enctype="multipart/form-data">
+      <form method="POST" action="" enctype="multipart/form-data">
         <input type="hidden" name="action" value="save_event">
         <?php if ($editEvent): ?>
           <input type="hidden" name="id" value="<?= h($editEvent['id']) ?>">
@@ -509,7 +522,7 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
           <button type="submit" class="btn btn-orange" style="padding:.7rem 1.75rem;font-size:.95rem">
             <?= $page === 'new' ? 'Créer l\'événement' : 'Enregistrer les modifications' ?>
           </button>
-          <a href="/admin/" class="btn btn-gray" style="padding:.7rem 1.25rem;font-size:.95rem">Annuler</a>
+          <a href="?" class="btn btn-gray" style="padding:.7rem 1.25rem;font-size:.95rem">Annuler</a>
         </div>
 
       </form>
@@ -523,7 +536,7 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
   <div class="mc">
     <h3>Supprimer l'événement ?</h3>
     <p id="delText">Cette action est irréversible.</p>
-    <form method="POST" action="/admin/">
+    <form method="POST" action="">
       <input type="hidden" name="action" value="delete_event">
       <input type="hidden" name="id" id="delId">
       <div class="mc-actions">
