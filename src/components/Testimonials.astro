@@ -36,10 +36,13 @@ const testimonials = [
       {testimonials.map((t) => (
         <article class="testi-card fade-up">
 
+          <!-- Decorative quote mark -->
+          <div class="testi-deco" aria-hidden="true">&ldquo;</div>
+
           <!-- Stars -->
           <div class="stars" aria-label="5 étoiles sur 5">
             {[1,2,3,4,5].map(() => (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
             ))}
@@ -47,7 +50,7 @@ const testimonials = [
 
           <!-- Quote -->
           <blockquote class="testi-quote">
-            &ldquo;{t.quote}&rdquo;
+            {t.quote}
           </blockquote>
 
           <!-- Author -->
@@ -115,17 +118,33 @@ const testimonials = [
   .testi-card {
     background: #1A2332;
     border: 1px solid rgba(255,255,255,0.08);
+    border-top: 2px solid rgba(255,107,53,.18);
     border-radius: var(--radius);
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1rem;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    transition: transform .35s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow .3s ease;
+    transition: transform .35s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow .3s ease, border-color .3s ease;
+    position: relative;
   }
   .testi-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 24px 56px rgba(0,0,0,.5), 0 4px 16px rgba(255,107,53,.08);
+    box-shadow: 0 24px 56px rgba(0,0,0,.5), 0 4px 16px rgba(255,107,53,.12);
+    border-top-color: rgba(255,107,53,.45);
+  }
+
+  /* Decorative large quote mark */
+  .testi-deco {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    line-height: 1;
+    color: rgba(255,107,53,.12);
+    pointer-events: none;
+    user-select: none;
   }
 
   /* Stars */
@@ -139,10 +158,12 @@ const testimonials = [
   .testi-quote {
     font-family: var(--font-heading);
     font-style: italic;
-    font-size: 1rem;
-    color: var(--dark);
-    line-height: 1.7;
+    font-size: .975rem;
+    color: rgba(240,237,232,.88);
+    line-height: 1.75;
     flex: 1;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,.07);
   }
 
   /* Author */
@@ -150,8 +171,7 @@ const testimonials = [
     display: flex;
     align-items: center;
     gap: .875rem;
-    padding-top: 1.125rem;
-    border-top: 1px solid rgba(255,255,255,.07);
+    padding-top: .25rem;
   }
 
   .testi-avatar {
@@ -167,6 +187,7 @@ const testimonials = [
     color: #ffffff;
     flex-shrink: 0;
     letter-spacing: .02em;
+    box-shadow: 0 2px 8px rgba(0,0,0,.35);
   }
 
   .testi-name {
@@ -177,10 +198,15 @@ const testimonials = [
   }
 
   .testi-city {
-    font-size: .78rem;
-    color: var(--grey);
-    font-weight: 400;
-    margin-top: .1rem;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--orange) 0%, var(--coral) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: .15rem;
   }
 
   /* Responsive */
