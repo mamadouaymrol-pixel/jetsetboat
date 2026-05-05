@@ -51,6 +51,10 @@
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <p class="footer-legal">SIRET 914 085 691 00014</p>
+      <nav class="footer-bottom-links" aria-label="Liens légaux">
+        <a href="#evenements" class="footer-bottom-link">Événements</a>
+        <a href="#contact"    class="footer-bottom-link">Contact</a>
+      </nav>
       <p class="footer-legal">&copy; 2025 JetSetBoat &mdash; Tous droits réservés</p>
     </div>
   </div>
@@ -178,6 +182,19 @@
     font-size: .74rem;
     color: rgba(255,255,255,.28);
   }
+
+  .footer-bottom-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .footer-bottom-link {
+    font-size: .74rem;
+    color: rgba(255,255,255,.38);
+    transition: color var(--transition);
+  }
+  .footer-bottom-link:hover { color: rgba(255,255,255,.75); }
 
   /* Responsive */
   @media (max-width: 860px) {

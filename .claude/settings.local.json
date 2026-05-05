@@ -20,7 +20,9 @@
       "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; git remote -v)",
       "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Get-ChildItem public\\\\images\\\\)",
       "PowerShell(git *)",
-      "PowerShell(git push *)"
+      "PowerShell(git push *)",
+      "PowerShell(cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Start-Process powershell -ArgumentList \"-NoProfile -Command `\"npm run dev`\"\"; Start-Sleep -Seconds 3; Start-Process \"http://localhost:4321\")",
+      "PowerShell(cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Start-Process powershell -ArgumentList \"-NoProfile -Command `\"npm run dev`\"\"; Start-Sleep -Seconds 2; Start-Process \"http://localhost:4321\")"
     ]
   },
   "enabledMcpjsonServers": [

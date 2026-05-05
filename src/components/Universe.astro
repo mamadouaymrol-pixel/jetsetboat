@@ -1,0 +1,155 @@
+---
+const pillars = [
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    title: "Exclusivité",
+    text:  "Chaque soirée est limitée à un nombre restreint d'invités pour garantir une atmosphère intimiste et soignée.",
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`,
+    title: "Instants uniques",
+    text:  "Couchers de soleil sur mer, DJs live, champagne — chaque détail est orchestré pour marquer les esprits.",
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    title: "Cadre naturel",
+    text:  "Saint-Tropez, Monaco, Cannes — les plus beaux spots de la Côte d'Azur comme décor de vos soirées.",
+  },
+];
+---
+
+<section class="universe">
+  <div class="container">
+
+    <div class="universe-header fade-up">
+      <p class="overline">Notre univers</p>
+      <h2 class="universe-title">
+        L'art de célébrer<br>
+        <em>en pleine mer.</em>
+      </h2>
+      <p class="universe-sub">
+        JetSetBoat réinvente la fête en la portant là où elle devrait toujours être — sur l'eau,
+        sous le soleil, loin de l'ordinaire.
+      </p>
+    </div>
+
+    <div class="universe-grid">
+      {pillars.map((p) => (
+        <div class="pillar fade-up">
+          <div class="pillar-icon" set:html={p.icon}></div>
+          <h3 class="pillar-title">{p.title}</h3>
+          <p class="pillar-text">{p.text}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .universe {
+    background: var(--cream);
+    padding: 140px 0;
+  }
+
+  /* Header */
+  .universe-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .universe-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: .875rem;
+    margin-bottom: 1.25rem;
+    letter-spacing: -.03em;
+    line-height: 1.08;
+  }
+
+  .universe-title em {
+    font-style: italic;
+    color: var(--orange);
+  }
+
+  .universe-sub {
+    font-size: 1rem;
+    color: var(--grey);
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Grid */
+  .universe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  /* Pillar card */
+  .pillar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.125rem;
+    transition: transform .4s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow .35s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .pillar:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Icon circle */
+  .pillar-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(255, 107, 53, .10);
+    color: #FF6B35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--transition), transform var(--transition-spring);
+  }
+  .pillar:hover .pillar-icon {
+    background: rgba(255, 107, 53, .18);
+    transform: scale(1.08);
+  }
+
+  .pillar-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -.015em;
+  }
+
+  .pillar-text {
+    font-size: .9rem;
+    color: var(--grey);
+    line-height: 1.72;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .universe-grid { grid-template-columns: 1fr 1fr; }
+    .universe { padding: 100px 0; }
+  }
+  @media (max-width: 540px) {
+    .universe-grid { grid-template-columns: 1fr; }
+    .universe { padding: 72px 0; }
+  }
+</style>
