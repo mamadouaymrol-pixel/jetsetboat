@@ -117,6 +117,7 @@
     transition:
       transform  .4s cubic-bezier(0.34, 1.2, 0.64, 1),
       box-shadow .35s ease;
+    position: relative;
   }
   .card:hover {
     transform: translateY(-8px);
@@ -137,6 +138,55 @@
       0 4px 20px rgba(255,107,53,.15);
   }
 
+  /* Sold out */
+  .card--sold-out {
+    opacity: 0.72;
+  }
+  .card--sold-out:hover {
+    transform: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .card-sold-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.20);
+    z-index: 3;
+    pointer-events: none;
+    border-radius: var(--radius);
+  }
+  .badge-complet {
+    display: inline-flex;
+    align-items: center;
+    padding: .45rem 1.25rem;
+    background: #dc2626;
+    color: #fff;
+    border-radius: 50px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  /* Spots urgency */
+  .spots-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .22rem .65rem;
+    background: rgba(255,107,53,.15);
+    border: 1px solid rgba(255,107,53,.45);
+    color: #FF6B35;
+    border-radius: 50px;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    animation: pulseOrange 2s ease-in-out infinite;
+  }
+  @keyframes pulseOrange {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .5; }
+  }
+
   /* Card link wrapper */
   .card-link {
     display: flex;
@@ -145,6 +195,10 @@
     text-decoration: none;
     color: #ffffff;
     cursor: pointer;
+  }
+  .card-link--static {
+    cursor: default;
+    pointer-events: none;
   }
 
   /* Stripe header */
@@ -325,20 +379,43 @@
       }
 
       grid.innerHTML = events.map((ev, i) => {
-        const date  = new Date(ev.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
-        const feat  = ev.featured ? ' card--featured' : '';
-        const num   = String(i + 1).padStart(2, '0');
-        const delay = (i * 0.12).toFixed(2);
-        const href  = safeUrl(ev.stripeLink);
-        const img   = escA(ev.image || '');
+        const date      = new Date(ev.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+        const feat      = ev.featured ? ' card--featured' : '';
+        const soldOut   = !!(ev.soldOut || Number(ev.spotsLeft) === 0);
+        const spotsLeft = Number(ev.spotsLeft ?? -1);
+        const spotsLow  = !soldOut && spotsLeft > 0 && spotsLeft <= 5;
+        const num       = String(i + 1).padStart(2, '0');
+        const delay     = (i * 0.12).toFixed(2);
+        const href      = safeUrl(ev.stripeLink);
+        const img       = escA(ev.image || '');
+        const soldCls   = soldOut ? ' card--sold-out' : '';
+
+        const spotsBadge = spotsLow
+          ? `<span class="spots-badge">Plus que ${escH(String(spotsLeft))} place${spotsLeft > 1 ? 's' : ''} !</span>`
+          : '';
+
+        const wrapOpen  = soldOut
+          ? `<div class="card-link card-link--static">`
+          : `<a href="${escA(href)}" target="_blank" rel="noopener noreferrer" class="card-link">`;
+        const wrapClose = soldOut ? `</div>` : `</a>`;
+
+        const actionBtn = soldOut
+          ? `<span class="badge-complet">Complet</span>`
+          : `<span class="btn btn-primary card-btn">R&eacute;server &rarr;</span>`;
+
+        const soldOverlay = soldOut
+          ? `<div class="card-sold-overlay" aria-hidden="true"></div>`
+          : '';
 
         return `
-<article class="card fade-up${escH(feat)}" style="transition-delay:${delay}s">
-  <a href="${escA(href)}" target="_blank" rel="noopener noreferrer" class="card-link">
-    <div class="card-stripe" style="background-image:url('${img.replace(/'/g,"%27")}')">
+<article class="card fade-up${escH(feat)}${escH(soldCls)}" style="transition-delay:${delay}s">
+  ${soldOverlay}
+  ${wrapOpen}
+    <div class="card-stripe" style="background-image:url('${img.replace(/'/g, '%27')}')">
       <span class="card-watermark" aria-hidden="true">${escH(num)}</span>
       <div class="card-stripe-inner">
         <span class="card-date">${escH(date)}</span>
+        ${spotsBadge}
       </div>
     </div>
     <div class="card-body">
@@ -353,15 +430,15 @@
     </div>
     <div class="card-footer">
       <div class="card-price-wrap">
-        <span class="card-price-label">À partir de</span>
+        <span class="card-price-label">&Agrave; partir de</span>
         <p class="card-price-row">
           <span class="card-price">${escH(String(ev.price))}</span>
-          <span class="card-currency">€</span>
+          <span class="card-currency">&euro;</span>
         </p>
       </div>
-      <span class="btn btn-primary card-btn">Réserver →</span>
+      ${actionBtn}
     </div>
-  </a>
+  ${wrapClose}
 </article>`;
       }).join('');
 
@@ -377,8 +454,48 @@
 
       grid.querySelectorAll('.fade-up').forEach(el => io.observe(el));
 
+      // Inject JSON-LD Event schema for rich results
+      const siteBase = 'https://www.jetsetboat.fr';
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: events.map((ev: any, i: number) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: {
+            '@type': 'Event',
+            name: ev.title,
+            startDate: ev.date,
+            location: {
+              '@type': 'Place',
+              name: ev.location,
+              address: { '@type': 'PostalAddress', addressCountry: 'FR' }
+            },
+            description: ev.description,
+            image: ev.image
+              ? (String(ev.image).startsWith('http') ? ev.image : siteBase + ev.image)
+              : undefined,
+            offers: {
+              '@type': 'Offer',
+              price: ev.price,
+              priceCurrency: 'EUR',
+              availability: (ev.soldOut || Number(ev.spotsLeft) === 0)
+                ? 'https://schema.org/SoldOut'
+                : 'https://schema.org/InStock',
+              url: ev.stripeLink
+            },
+            organizer: { '@type': 'Organization', name: 'JetSetBoat' }
+          }
+        }))
+      };
+
+      const ldScript = document.createElement('script');
+      ldScript.type = 'application/ld+json';
+      ldScript.textContent = JSON.stringify(jsonLd);
+      document.head.appendChild(ldScript);
+
     } catch {
-      if (grid) grid.innerHTML = '<p class="events-error">Impossible de charger les événements.</p>';
+      if (grid) grid.innerHTML = '<p class="events-error">Impossible de charger les &eacute;v&eacute;nements.</p>';
     }
   }
 

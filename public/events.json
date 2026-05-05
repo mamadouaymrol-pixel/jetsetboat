@@ -8,7 +8,10 @@
         "image": "/images/bg-events.jpg",
         "price": 45,
         "stripeLink": "https://buy.stripe.com/test_fictif_001",
-        "featured": false
+        "featured": false,
+        "soldOut": false,
+        "spots": 80,
+        "spotsLeft": 80
     },
     {
         "id": "evt002",
@@ -19,7 +22,10 @@
         "image": "/images/bg-nights.jpg",
         "price": 95,
         "stripeLink": "https://buy.stripe.com/test_fictif_002",
-        "featured": true
+        "featured": true,
+        "soldOut": false,
+        "spots": 30,
+        "spotsLeft": 30
     },
     {
         "id": "evt003",
@@ -30,6 +36,9 @@
         "image": "/images/bg-testimonials.jpg",
         "price": 35,
         "stripeLink": "https://buy.stripe.com/test_fictif_003",
-        "featured": false
+        "featured": false,
+        "soldOut": false,
+        "spots": 100,
+        "spotsLeft": 100
     }
 ]

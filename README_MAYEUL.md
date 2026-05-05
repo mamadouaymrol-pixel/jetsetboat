@@ -31,9 +31,12 @@ Bienvenue Mayeul ! Ce guide explique comment gérer les événements sur ton sit
    | **Lieu** | Saint-Tropez |
    | **Description** | Coucher de soleil & deep house sur le pont... |
    | **Prix (€)** | 55 |
-   | **Lien Stripe** | https://buy.stripe.com/... (voir section 4) |
+   | **Lien Stripe** | https://buy.stripe.com/... (voir section 5) |
    | **Image** | Choisir un fichier JPG/PNG (max 5 MB) |
    | **Vedette** | Cocher si tu veux que cet événement soit mis en avant |
+   | **Sold out** | Laisser décoché à la création |
+   | **Nombre total de places** | Ex : 80 |
+   | **Places restantes** | Ex : 80 (même valeur au départ) |
 
 3. Clique sur **Créer l'événement**.
 
@@ -53,7 +56,47 @@ Bienvenue Mayeul ! Ce guide explique comment gérer les événements sur ton sit
 
 ---
 
-## 4. Supprimer un événement
+## 4. Marquer un événement comme complet (Sold out)
+
+Quand toutes les places sont vendues, tu peux afficher un badge **"Complet"** rouge sur la carte de l'événement :
+
+### Option 1 — Automatique
+Si tu as renseigné un nombre de **places restantes** et qu'il atteint **0**, l'événement passe automatiquement en "Complet" à la prochaine modification.
+
+### Option 2 — Manuel
+1. Clique sur **Modifier** à côté de l'événement concerné.
+2. Coche la case **"Sold out — marquer l'événement comme complet"**.
+3. Clique sur **Enregistrer les modifications**.
+
+**Effet sur le site public :**
+- Le bouton "Réserver →" est remplacé par un badge rouge **"Complet"**
+- Le lien Stripe est désactivé (plus de clics accidentels)
+- La carte s'affiche légèrement assombrie
+
+### Réouvrir les ventes
+Pour réactiver un événement complet : décocher la case "Sold out" et cliquer sur **Enregistrer les modifications**.
+
+---
+
+## 5. Gérer les places disponibles
+
+Les champs **"Nombre total de places"** et **"Places restantes"** permettent d'afficher l'urgence sur le site.
+
+### Comportement sur le site public
+- Si **places restantes ≤ 5** (et > 0) : un badge orange animé **"Plus que X places !"** apparaît sur la carte
+- Si **places restantes = 0** : l'événement passe automatiquement en "Complet"
+
+### Mise à jour après une vente
+Après chaque vente Stripe, mets à jour les places restantes manuellement :
+1. Clique sur **Modifier** à côté de l'événement.
+2. Dans le champ **"Places restantes"**, diminue le chiffre du nombre de billets vendus.
+3. Clique sur **Enregistrer les modifications**.
+
+> **Astuce :** Pour être averti des ventes en temps réel, configure les notifications email dans ton dashboard Stripe (Paramètres → Notifications).
+
+---
+
+## 6. Supprimer un événement
 
 1. Dans la liste, clique sur le bouton rouge **Supprimer** à droite de l'événement.
 
@@ -63,7 +106,7 @@ Bienvenue Mayeul ! Ce guide explique comment gérer les événements sur ton sit
 
 ---
 
-## 5. Créer un vrai lien de paiement Stripe
+## 7. Créer un vrai lien de paiement Stripe
 
 Avant de publier un événement, crée son lien de paiement sur Stripe :
 
@@ -75,7 +118,7 @@ Avant de publier un événement, crée son lien de paiement sur Stripe :
 
 4. Configure :
    - **Produit :** crée un nouveau produit "JetSet Sunset — 14 juin 2025" avec le prix correspondant
-   - **Quantité :** tu peux limiter le nombre de places disponibles
+   - **Quantité :** tu peux limiter le nombre de places disponibles directement via Stripe
    - **Redirection après paiement :** vers ton site si tu veux (optionnel)
 
 5. Clique sur **Create link**. Stripe génère une URL comme :
@@ -85,7 +128,7 @@ Avant de publier un événement, crée son lien de paiement sur Stripe :
 
 ---
 
-## 6. Uploader une image d'événement
+## 8. Uploader une image d'événement
 
 L'image doit respecter ces règles :
 - Format : **JPG, PNG ou WebP** (pas de GIF animé, pas de PDF)
@@ -98,7 +141,7 @@ Si tu n'as pas d'image, tu peux coller une URL d'image dans le champ "URL de l'i
 
 ---
 
-## 7. Mettre à jour le site sur OVH
+## 9. Mettre à jour le site sur OVH
 
 Les modifications des événements sont **instantanées** — le fichier `events.json` est mis à jour sur le serveur et le site le lit immédiatement. Tu n'as pas besoin de toucher à FTP pour gérer les événements.
 
@@ -110,16 +153,19 @@ En revanche, si une mise à jour du design ou du code est effectuée par le dév
 
 ---
 
-## 8. Questions fréquentes
+## 10. Questions fréquentes
 
-**Q: Un client a payé mais l'événement est complet, que faire ?**
-R: Modifie le lien Stripe sur le dashboard Stripe pour désactiver les ventes (Payment Links → désactiver le lien). Tu n'as pas besoin de modifier l'événement sur le site.
+**Q: Comment indiquer qu'un événement est complet sans supprimer le bouton Stripe ?**
+R: Utilise la case à cocher "Sold out" dans le formulaire de modification. La carte affichera "Complet" en rouge et le lien Stripe sera désactivé côté site, mais tu peux le réactiver à tout moment en décochant la case.
+
+**Q: Le badge "Plus que X places !" ne s'affiche pas ?**
+R: Il apparaît uniquement si le champ "Places restantes" est renseigné et inférieur ou égal à 5. Vérifie que tu as bien saisi une valeur dans ce champ lors de la modification de l'événement.
 
 **Q: L'image ne s'affiche pas après upload ?**
 R: Vérifie que le dossier `images/events/` a les bonnes permissions sur OVH (chmod 755). Contacte l'hébergeur si besoin.
 
 **Q: J'ai oublié mon mot de passe admin ?**
-R: Contacte le développeur pour modifier le fichier `admin/config.php` sur le serveur.
+R: Contacte le développeur pour modifier le fichier `admin/config.php` sur le serveur. Tu peux aussi le changer toi-même via **Mot de passe** dans la barre de navigation de l'admin, si tu te souviens de ton mot de passe actuel.
 
 **Q: Le formulaire de contact ne fonctionne pas ?**
 R: Le formulaire envoie les emails vers `Mayeulg@yahoo.fr`. Si tu ne reçois rien, vérifie le dossier spam. Si le problème persiste, contacte le développeur pour reconfigurer le SMTP.

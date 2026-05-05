@@ -97,7 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $desc     = trim($_POST['description'] ?? '');
         $price    = (float)($_POST['price'] ?? 0);
         $stripe   = trim($_POST['stripe_link'] ?? '');
-        $featured = !empty($_POST['featured']);
+        $featured  = !empty($_POST['featured']);
+        $soldOut   = !empty($_POST['sold_out']);
+        $spots     = max(0, (int)($_POST['spots']      ?? 0));
+        $spotsLeft = max(0, (int)($_POST['spots_left'] ?? 0));
+        if ($spotsLeft === 0 && $spots > 0) $soldOut = true;
 
         if (!$title || !$date || !$location || !$desc || !$price || !$stripe) {
             setFlash('error', 'Tous les champs obligatoires (*) doivent être remplis.');
@@ -164,6 +168,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'price'       => $price,
             'stripeLink'  => $stripe,
             'featured'    => $featured,
+            'soldOut'     => $soldOut,
+            'spots'       => $spots,
+            'spotsLeft'   => $spotsLeft,
         ];
 
         if ($isNew) {
@@ -454,6 +461,13 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
                 <span>📍 <?= h($ev['location']) ?></span>
                 <span>💶 <?= h((string)$ev['price']) ?> €</span>
                 <a href="<?= h($ev['stripeLink']) ?>" target="_blank" rel="noopener" style="color:#FF6B35">Stripe ↗</a>
+                <?php if (!empty($ev['soldOut'])): ?>
+                  <span style="background:#fee2e2;color:#dc2626;padding:.1rem .5rem;border-radius:50px;font-size:.68rem;font-weight:700">Complet</span>
+                <?php elseif (isset($ev['spotsLeft']) && $ev['spotsLeft'] <= 5 && $ev['spotsLeft'] > 0): ?>
+                  <span style="background:#fff7ed;color:#ea580c;padding:.1rem .5rem;border-radius:50px;font-size:.68rem;font-weight:700">⚡ <?= h((string)$ev['spotsLeft']) ?> pl. restantes</span>
+                <?php elseif (isset($ev['spots']) && $ev['spots'] > 0): ?>
+                  <span><?= h((string)($ev['spotsLeft'] ?? $ev['spots'])) ?>/<?= h((string)$ev['spots']) ?> places</span>
+                <?php endif; ?>
               </div>
             </div>
 
@@ -551,6 +565,31 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
                      <?= !empty($editEvent['featured']) ? 'checked' : '' ?>>
               <label for="featured">Mettre cet événement en avant (carte vedette)</label>
             </div>
+          </div>
+
+          <div class="fg-group full">
+            <div class="chk-row">
+              <input type="checkbox" id="sold_out" name="sold_out" value="1"
+                     <?= !empty($editEvent['soldOut']) ? 'checked' : '' ?>>
+              <label for="sold_out">Sold out — marquer l'événement comme complet</label>
+            </div>
+            <p class="hint">Se coche automatiquement quand les places restantes atteignent 0. Désactive le bouton de réservation sur le site.</p>
+          </div>
+
+          <div class="fg-group">
+            <label for="spots">Nombre total de places</label>
+            <input type="number" id="spots" name="spots" min="0" step="1"
+                   value="<?= h((string)($editEvent['spots'] ?? '')) ?>"
+                   placeholder="80">
+            <p class="hint">Capacité totale de l'événement (0 = non limité).</p>
+          </div>
+
+          <div class="fg-group">
+            <label for="spots_left">Places restantes</label>
+            <input type="number" id="spots_left" name="spots_left" min="0" step="1"
+                   value="<?= h((string)($editEvent['spotsLeft'] ?? '')) ?>"
+                   placeholder="80">
+            <p class="hint">Mise à jour manuelle après chaque vente. Passe en "Complet" automatiquement à 0.</p>
           </div>
 
         </div>
