@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # Claude Code
 .claude/
+
+# Netlify local state
+.netlify/
+
+# Admin credentials (copy config.example.php → config.php on the server)
+public/admin/config.php

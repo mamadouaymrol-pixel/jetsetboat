@@ -1,12 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
-
-const allEvents = await getCollection('events');
-const events = allEvents.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-
-function formatDate(date: Date): string {
-  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
-}
 ---
 
 <section class="events" id="evenements">
@@ -18,42 +10,10 @@ function formatDate(date: Date): string {
       <p class="events-sub">Chaque événement est une invitation à vivre autrement. Nombre de places limité, ambiance soignée, décor naturel exceptionnel — réservez avant qu'il ne soit trop tard.</p>
     </div>
 
-    <div class="cards-grid">
-      {events.map((ev, i) => (
-        <article class={`card fade-up${ev.data.featured ? ' card--featured' : ''}`}>
-
-          <div class="card-stripe" style={`background-image: url('${ev.data.image}')`}>
-            <span class="card-watermark" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <div class="card-stripe-inner">
-              <span class="card-date">{formatDate(ev.data.date)}</span>
-            </div>
-          </div>
-
-          <div class="card-body">
-            <h3 class="card-name">{ev.data.title}</h3>
-            <p class="card-location">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-              {ev.data.location}
-            </p>
-            <p class="card-desc">{ev.data.description}</p>
-          </div>
-
-          <div class="card-footer">
-            <div class="card-price-wrap">
-              <span class="card-price-label">À partir de</span>
-              <p class="card-price-row">
-                <span class="card-price">{ev.data.price}</span>
-                <span class="card-currency">€</span>
-              </p>
-            </div>
-            <a href="#contact" class="btn btn-primary card-btn">Réserver →</a>
-          </div>
-
-        </article>
-      ))}
+    <div class="cards-grid" id="events-grid">
+      <div class="events-loading">
+        <span class="ld"></span><span class="ld"></span><span class="ld"></span>
+      </div>
     </div>
 
   </div>
@@ -114,6 +74,35 @@ function formatDate(date: Date): string {
     align-items: start;
   }
 
+  /* Loading dots */
+  .events-loading {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: .5rem;
+    padding: 4rem 0;
+  }
+  .ld {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    animation: dotPulse 1.2s ease-in-out infinite;
+  }
+  .ld:nth-child(2) { animation-delay: .2s; }
+  .ld:nth-child(3) { animation-delay: .4s; }
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: .25; transform: scale(1); }
+    40%           { opacity: 1;   transform: scale(1.3); }
+  }
+
+  .events-empty, .events-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--grey);
+    font-size: .95rem;
+  }
+
   /* Card */
   .card {
     background: #1A2332;
@@ -144,6 +133,16 @@ function formatDate(date: Date): string {
     box-shadow:
       0 32px 72px rgba(0,0,0,.6),
       0 4px 20px rgba(255,107,53,.15);
+  }
+
+  /* Card link wrapper */
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
   }
 
   /* Stripe header */
@@ -295,3 +294,91 @@ function formatDate(date: Date): string {
     .cards-grid { grid-template-columns: 1fr; }
   }
 </style>
+
+<script>
+  function escH(s: string): string {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escA(s: string): string {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function safeUrl(url: string): string {
+    return /^https?:\/\//.test(url) ? url : '#';
+  }
+
+  async function loadEvents(): Promise<void> {
+    const grid = document.getElementById('events-grid');
+    if (!grid) return;
+
+    try {
+      const res = await fetch('/events.json');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const events: any[] = await res.json();
+
+      events.sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+      if (!events.length) {
+        grid.innerHTML = '<p class="events-empty">Aucun événement à venir pour le moment.</p>';
+        return;
+      }
+
+      grid.innerHTML = events.map((ev, i) => {
+        const date  = new Date(ev.date + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+        const feat  = ev.featured ? ' card--featured' : '';
+        const num   = String(i + 1).padStart(2, '0');
+        const delay = (i * 0.12).toFixed(2);
+        const href  = safeUrl(ev.stripeLink);
+        const img   = escA(ev.image || '');
+
+        return `
+<article class="card fade-up${escH(feat)}" style="transition-delay:${delay}s">
+  <a href="${escA(href)}" target="_blank" rel="noopener noreferrer" class="card-link">
+    <div class="card-stripe" style="background-image:url('${img.replace(/'/g,"%27")}')">
+      <span class="card-watermark" aria-hidden="true">${escH(num)}</span>
+      <div class="card-stripe-inner">
+        <span class="card-date">${escH(date)}</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3 class="card-name">${escH(ev.title)}</h3>
+      <p class="card-location">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        ${escH(ev.location)}
+      </p>
+      <p class="card-desc">${escH(ev.description)}</p>
+    </div>
+    <div class="card-footer">
+      <div class="card-price-wrap">
+        <span class="card-price-label">À partir de</span>
+        <p class="card-price-row">
+          <span class="card-price">${escH(String(ev.price))}</span>
+          <span class="card-currency">€</span>
+        </p>
+      </div>
+      <span class="btn btn-primary card-btn">Réserver →</span>
+    </div>
+  </a>
+</article>`;
+      }).join('');
+
+      // Observe newly injected cards for fade-up animation
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.10 });
+
+      grid.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    } catch {
+      if (grid) grid.innerHTML = '<p class="events-error">Impossible de charger les événements.</p>';
+    }
+  }
+
+  loadEvents();
+</script>

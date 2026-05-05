@@ -1,4 +1,8 @@
 ---
+// In dev, the form POSTs to XAMPP on port 8080; in production, same origin.
+const contactUrl = import.meta.env.DEV
+  ? 'http://localhost:8080/contact.php'
+  : '/contact.php';
 ---
 
 <section class="contact" id="contact">
@@ -66,7 +70,11 @@
 
     <!-- Form card -->
     <div class="form-card fade-up">
-      <form class="contact-form" name="contact" method="POST" novalidate>
+      <form class="contact-form" id="contactForm" action={contactUrl} method="POST" novalidate>
+
+        <!-- Honeypot anti-spam (hidden) -->
+        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
         <div class="form-row">
           <div class="form-group">
             <label for="prenom">Prénom</label>
@@ -88,10 +96,18 @@
           <textarea id="message" name="message" rows="5" placeholder="Décrivez votre demande..." required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary submit-btn">
+        <div class="form-error" id="formError" aria-live="polite"></div>
+
+        <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
           Envoyer ma demande &rarr;
         </button>
       </form>
+
+      <div class="form-success" id="formSuccess" hidden>
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h3>Message envoyé !</h3>
+        <p>Merci, nous vous répondons sous 24h.</p>
+      </div>
     </div>
 
   </div>
@@ -301,6 +317,43 @@
     margin-top: .25rem;
   }
 
+  .form-error {
+    font-size: .85rem;
+    color: #f87171;
+    min-height: 1.2em;
+  }
+
+  /* Success state */
+  .form-success {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(34,197,94,.15);
+    color: #22c55e;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-success h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: .5rem;
+  }
+
+  .form-success p {
+    color: var(--grey);
+    font-size: .9rem;
+  }
+
   /* Responsive */
   @media (max-width: 860px) {
     .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
@@ -311,3 +364,35 @@
     .form-card { padding: 1.5rem; }
   }
 </style>
+
+<script>
+  const form      = document.getElementById('contactForm') as HTMLFormElement;
+  const submitBtn = document.getElementById('submitBtn')  as HTMLButtonElement;
+  const errorBox  = document.getElementById('formError')  as HTMLDivElement;
+  const successEl = document.getElementById('formSuccess') as HTMLDivElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.textContent = '';
+    submitBtn.disabled   = true;
+    submitBtn.textContent = 'Envoi en cours…';
+
+    try {
+      const res  = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const json = await res.json();
+
+      if (json.ok) {
+        form.hidden      = true;
+        successEl.hidden = false;
+      } else {
+        errorBox.textContent  = json.error || 'Une erreur est survenue, veuillez réessayer.';
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Envoyer ma demande →';
+      }
+    } catch {
+      errorBox.textContent  = 'Impossible d\'envoyer le message. Vérifiez votre connexion.';
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'Envoyer ma demande →';
+    }
+  });
+</script>
