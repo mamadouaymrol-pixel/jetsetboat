@@ -31,16 +31,5 @@
         "price": 35,
         "stripeLink": "https://buy.stripe.com/test_fictif_003",
         "featured": false
-    },
-    {
-        "id": "evt69fa6325ef3ca4.10701044",
-        "title": "Beach party",
-        "date": "2026-05-08",
-        "location": "vallauris",
-        "description": "DJ PARTY PLAGE TEST",
-        "image": "/jetsetboat/images/events/event_69fa6325eee5b2.43264593.jpg",
-        "price": 15,
-        "stripeLink": "https://buy.stripe.com/test_fictif_004",
-        "featured": false
     }
 ]
