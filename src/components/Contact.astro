@@ -98,7 +98,25 @@
 </section>
 
 <style>
-  .contact { background: var(--white); }
+  .contact {
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle background image */
+  .contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/images/contact-bg.jpg') center / cover no-repeat;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Lift all content above the bg image */
+  .contact-inner { position: relative; z-index: 1; }
 
   .contact-inner {
     display: grid;

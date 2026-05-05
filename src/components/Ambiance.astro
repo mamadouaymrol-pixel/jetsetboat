@@ -1,0 +1,68 @@
+---
+---
+
+<section class="ambiance" aria-label="Ambiance JetSetBoat">
+  <div class="ambiance-overlay" aria-hidden="true"></div>
+  <div class="ambiance-content">
+    <p class="ambiance-quote">&ldquo;L'horizon comme seule limite.&rdquo;</p>
+    <span class="ambiance-brand">JetSetBoat</span>
+  </div>
+</section>
+
+<style>
+  .ambiance {
+    position: relative;
+    height: 450px;
+    width: 100%;
+    overflow: hidden;
+    background: url('/images/ambiance.jpg') center / cover no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ambiance-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.30);
+    z-index: 0;
+  }
+
+  .ambiance-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .ambiance-quote {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-style: italic;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    margin-bottom: .875rem;
+    text-shadow: 0 2px 24px rgba(0,0,0,.3);
+  }
+
+  .ambiance-brand {
+    display: block;
+    font-family: var(--font-body);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+
+  /* Disable parallax on mobile (fixed bg doesn't work reliably) */
+  @media (max-width: 768px) {
+    .ambiance {
+      background-attachment: scroll;
+      height: 360px;
+    }
+  }
+</style>

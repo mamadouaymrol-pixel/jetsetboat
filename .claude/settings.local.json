@@ -16,7 +16,9 @@
       "mcp__magic__21st_magic_component_refiner",
       "PowerShell(cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Start-Process powershell -ArgumentList \"-NoProfile -Command `\"npm run dev`\"\" -WindowStyle Minimized; Start-Sleep -Seconds 3; Write-Host \"Dev server started on http://localhost:4321\")",
       "PowerShell(Get-Command *)",
-      "PowerShell(winget install *)"
+      "PowerShell(winget install *)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; git remote -v)",
+      "PowerShell($env:PATH += \";C:\\\\Program Files\\\\Git\\\\cmd\"; cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Get-ChildItem public\\\\images\\\\)"
     ]
   },
   "enabledMcpjsonServers": [
