@@ -192,6 +192,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         redirect(ADMIN_BASE);
     }
+
+    /* Change password */
+    if ($action === 'change_password') {
+        requireLogin();
+        $currentPass = $_POST['current_password'] ?? '';
+        $newPass     = $_POST['new_password']      ?? '';
+        $confirmPass = $_POST['confirm_password']  ?? '';
+
+        if (!hash_equals(ADMIN_PASS, $currentPass)) {
+            setFlash('error', 'Mot de passe actuel incorrect.');
+            redirect(ADMIN_BASE . '?page=password');
+        }
+        if (strlen($newPass) < 8) {
+            setFlash('error', 'Le nouveau mot de passe doit contenir au moins 8 caractères.');
+            redirect(ADMIN_BASE . '?page=password');
+        }
+        if ($newPass !== $confirmPass) {
+            setFlash('error', 'Le nouveau mot de passe et sa confirmation ne correspondent pas.');
+            redirect(ADMIN_BASE . '?page=password');
+        }
+
+        $configContent = "<?php\n"
+            . "if (!defined('ADMIN_GUARD')) { http_response_code(403); exit; }\n\n"
+            . "// ── Admin credentials ────────────────────────────────────────────────────────\n"
+            . "// Change ADMIN_PASS before sharing access.\n"
+            . "define('ADMIN_USER', '" . addslashes(ADMIN_USER) . "');\n"
+            . "define('ADMIN_PASS', '" . addslashes($newPass) . "');\n";
+
+        if (file_put_contents(__DIR__ . '/config.php', $configContent) === false) {
+            setFlash('error', 'Impossible de mettre à jour config.php. Vérifiez les permissions du fichier.');
+            redirect(ADMIN_BASE . '?page=password');
+        }
+
+        setFlash('success', 'Mot de passe modifié avec succès.');
+        redirect(ADMIN_BASE);
+    }
 }
 
 /* ── Render ── */
@@ -371,6 +407,7 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
     <a href="?" class="btn btn-ghost">Événements</a>
     <a href="?page=new" class="btn btn-orange">+ Nouvel événement</a>
     <a href="<?= h(SITE_BASE) ?>" class="btn btn-ghost" target="_blank">Voir le site ↗</a>
+    <a href="?page=password" class="btn btn-ghost">Mot de passe</a>
     <a href="?logout=1" class="btn btn-ghost">Déconnexion</a>
   </nav>
 </header>
@@ -527,6 +564,48 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
 
       </form>
     </div>
+
+  <?php elseif ($page === 'password'): ?>
+    <!-- ─── Change password ─── -->
+    <div class="ph">
+      <h1>Changer le mot de passe</h1>
+      <a href="?" class="btn btn-gray">← Retour</a>
+    </div>
+
+    <div class="fc" style="max-width:480px">
+      <form method="POST" action="">
+        <input type="hidden" name="action" value="change_password">
+        <div class="fg" style="grid-template-columns:1fr">
+
+          <div class="fg-group">
+            <label for="current_password">Mot de passe actuel</label>
+            <input type="password" id="current_password" name="current_password"
+                   required autocomplete="current-password" placeholder="••••••••">
+          </div>
+
+          <div class="fg-group">
+            <label for="new_password">Nouveau mot de passe</label>
+            <input type="password" id="new_password" name="new_password"
+                   required autocomplete="new-password" minlength="8" placeholder="••••••••">
+            <p class="hint">Minimum 8 caractères.</p>
+          </div>
+
+          <div class="fg-group">
+            <label for="confirm_password">Confirmer le nouveau mot de passe</label>
+            <input type="password" id="confirm_password" name="confirm_password"
+                   required autocomplete="new-password" minlength="8" placeholder="••••••••">
+          </div>
+
+        </div>
+        <div class="fa">
+          <button type="submit" class="btn btn-orange" style="padding:.7rem 1.75rem;font-size:.95rem">
+            Enregistrer le nouveau mot de passe
+          </button>
+          <a href="?" class="btn btn-gray" style="padding:.7rem 1.25rem;font-size:.95rem">Annuler</a>
+        </div>
+      </form>
+    </div>
+
   <?php endif; ?>
 
 </main>
