@@ -1,17 +1,17 @@
 ---
 const pillars = [
   {
-    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    img:   "/images/univers-1.jpg",
     title: "Exclusivité",
     text:  "Chaque soirée est limitée à un nombre restreint d'invités pour garantir une atmosphère intimiste et soignée.",
   },
   {
-    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`,
+    img:   "/images/univers-2.jpg",
     title: "Instants uniques",
     text:  "Couchers de soleil sur mer, DJs live, champagne — chaque détail est orchestré pour marquer les esprits.",
   },
   {
-    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    img:   "/images/univers-3.jpg",
     title: "Cadre naturel",
     text:  "Saint-Tropez, Monaco, Cannes — les plus beaux spots de la Côte d'Azur comme décor de vos soirées.",
   },
@@ -36,7 +36,7 @@ const pillars = [
     <div class="universe-grid">
       {pillars.map((p) => (
         <div class="pillar fade-up">
-          <div class="pillar-icon" set:html={p.icon}></div>
+          <img class="pillar-img" src={p.img} alt="" aria-hidden="true" />
           <h3 class="pillar-title">{p.title}</h3>
           <p class="pillar-text">{p.text}</p>
         </div>
@@ -50,6 +50,23 @@ const pillars = [
   .universe {
     background: #0D1117;
     padding: 140px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .universe::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(13,17,23,0.85), rgba(13,17,23,0.85)),
+      url('/images/bg-univers.jpg') center / cover no-repeat;
+    z-index: 0;
+  }
+
+  .universe .container {
+    position: relative;
+    z-index: 1;
   }
 
   /* Header */
@@ -113,22 +130,20 @@ const pillars = [
     border-top-color: rgba(255,107,53,.45);
   }
 
-  /* Icon circle */
-  .pillar-icon {
-    width: 68px;
-    height: 68px;
+  /* Round pillar image */
+  .pillar-img {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    background: rgba(255, 107, 53, .10);
-    color: #FF6B35;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: cover;
     flex-shrink: 0;
-    transition: background var(--transition), transform var(--transition-spring);
+    border: 2px solid rgba(255,107,53,.25);
+    box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    transition: transform var(--transition-spring), border-color var(--transition);
   }
-  .pillar:hover .pillar-icon {
-    background: rgba(255, 107, 53, .18);
+  .pillar:hover .pillar-img {
     transform: scale(1.08);
+    border-color: rgba(255,107,53,.55);
   }
 
   .pillar-title {

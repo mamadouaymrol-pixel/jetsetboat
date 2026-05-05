@@ -92,24 +92,24 @@ const events = [
 
 <style>
   .events {
-    background:
-      radial-gradient(ellipse at 30% 50%, rgba(255,107,53,0.05) 0%, transparent 60%),
-      #111820;
+    background: #111820;
     position: relative;
     overflow: hidden;
   }
 
-  /* Faint orange blob top-right */
-  .events::after {
+  .events::before {
     content: '';
     position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,107,53,0.06) 0%, transparent 70%);
-    pointer-events: none;
+    inset: 0;
+    background:
+      linear-gradient(rgba(13,17,23,0.88), rgba(13,17,23,0.88)),
+      url('/images/bg-events.jpg') center / cover no-repeat;
+    z-index: 0;
+  }
+
+  .events .container {
+    position: relative;
+    z-index: 1;
   }
 
   .events-header {

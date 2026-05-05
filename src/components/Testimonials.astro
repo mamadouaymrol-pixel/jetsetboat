@@ -79,17 +79,19 @@ const testimonials = [
     overflow: hidden;
   }
 
-  /* Faint orange blob bottom-left */
   .testimonials::before {
     content: '';
     position: absolute;
-    bottom: -80px;
-    left: -80px;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,107,53,0.05) 0%, transparent 70%);
-    pointer-events: none;
+    inset: 0;
+    background:
+      linear-gradient(rgba(13,17,23,0.88), rgba(13,17,23,0.88)),
+      url('/images/bg-testimonials.jpg') center / cover no-repeat;
+    z-index: 0;
+  }
+
+  .testimonials .container {
+    position: relative;
+    z-index: 1;
   }
 
   .testi-header {

@@ -30,24 +30,21 @@
 
 <style>
   .ig-cta {
-    background: #1A3A5C;
+    background: #0D1117;
     padding: 100px 0;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
 
-  /* Subtle radial glow behind content */
   .ig-cta::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(255,107,53,.10) 0%, transparent 65%);
-    pointer-events: none;
+    inset: 0;
+    background:
+      linear-gradient(rgba(13,17,23,0.75), rgba(13,17,23,0.75)),
+      url('/images/bg-nights.jpg') center / cover no-repeat;
+    z-index: 0;
   }
 
   .ig-cta-inner {
