@@ -114,33 +114,39 @@ import Footer  from '../components/Footer.astro';
   .legal-body {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 0;
   }
+
+  .legal-section {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .legal-section:first-child { padding-top: 0; }
 
   .legal-section h2 {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--navy);
-    margin-bottom: .875rem;
+    margin-bottom: .5rem;
     letter-spacing: -.01em;
   }
 
   .legal-section p {
-    font-size: .95rem;
+    font-size: .92rem;
     color: var(--grey);
-    line-height: 1.8;
+    line-height: 1.75;
   }
 
   .legal-section ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .35rem;
   }
 
   .legal-section li {
-    font-size: .95rem;
+    font-size: .92rem;
     color: var(--grey);
     line-height: 1.6;
   }

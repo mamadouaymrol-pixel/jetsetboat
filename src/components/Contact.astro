@@ -104,18 +104,28 @@
     overflow: hidden;
   }
 
-  /* Subtle background image */
+  /* Background image */
   .contact::before {
     content: '';
     position: absolute;
     inset: 0;
     background: url('/images/contact-bg.jpg') center / cover no-repeat;
-    opacity: 0.12;
+    opacity: 0.35;
     pointer-events: none;
     z-index: 0;
   }
 
-  /* Lift all content above the bg image */
+  /* Cream softening overlay so text stays readable */
+  .contact::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 250, 245, 0.45);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Lift all content above both pseudo-elements */
   .contact-inner { position: relative; z-index: 1; }
 
   .contact-inner {

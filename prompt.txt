@@ -1,36 +1,17 @@
-CREATE src/pages/politique-confidentialite.astro
-Use same Layout, Navbar and Footer as index.astro.
-Style with Playfair Display titles, Inter body, generous padding.
+Fix two issues:
 
-CONTENT:
+1. MENTIONS LEGALES page - fix spacing:
+In mentions-legales.astro reduce the huge gaps between sections.
+Max margin between sections: 2rem.
+Add a light border-bottom on each section for separation.
+The page should feel compact and readable like a document.
 
-1. Responsable du traitement
-Mayeul Gallian
-contact@jetsetboat.fr
-+33 6 98 92 50 61
-
-2. Donnees collectees
-Nom, prenom, email et message via formulaire de contact uniquement.
-
-3. Finalite
-Repondre aux demandes de contact et de reservation.
-
-4. Duree de conservation
-3 ans maximum apres le dernier contact.
-
-5. Vos droits RGPD
-Droit d acces, rectification, suppression et opposition.
-Pour exercer vos droits : contact@jetsetboat.fr
-Reponse sous 30 jours.
-
-6. Securite
-Les donnees sont transmises via protocole HTTPS securise.
-Aucune donnee n est vendue ou transmise a des tiers.
-
-7. Cookies
-Ce site n utilise pas de cookies de tracking ou publicitaires.
-
-8. Contact DPO
-Pour toute question : contact@jetsetboat.fr
-
-Mise a jour : Mai 2025
+2. CONTACT background image - it's still not visible enough:
+In Contact.astro change the ::before pseudo-element:
+- opacity: 0.22 → increase to 0.35
+- Add a very subtle overlay on top so text stays readable:
+  after the ::before, add a ::after with 
+  background: rgba(255,250,245,0.45) to soften the image
+  without hiding it completely
+- The image contact-bg.jpg should be clearly visible 
+  as a real background, not just a hint
