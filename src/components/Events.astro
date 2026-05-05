@@ -1,0 +1,312 @@
+---
+const events = [
+  {
+    num:         "01",
+    date:        "14 Juin",
+    name:        "JetSet Sunset",
+    location:    "Saint-Tropez",
+    description: "Sunset & deep house sur le pont. Coucher de soleil face à la mer avec les meilleurs DJs de la Côte.",
+    price:       "45",
+    tag:         "Populaire",
+    gradient:    "linear-gradient(135deg, #FF6B35 0%, #F4A261 100%)",
+    featured:    false,
+  },
+  {
+    num:         "02",
+    date:        "28 Juin",
+    name:        "JetSet VIP",
+    location:    "Monaco",
+    description: "Soirée privée, champagne & DJ set. L'expérience ultime en Principauté, places très limitées.",
+    price:       "95",
+    tag:         "VIP",
+    gradient:    "linear-gradient(135deg, #1A3A5C 0%, #2a5f94 100%)",
+    featured:    true,
+  },
+  {
+    num:         "03",
+    date:        "13 Sept",
+    name:        "JetSet Beach White",
+    location:    "Cannes",
+    description: "All white party sur la plage. Dress code blanc obligatoire, ambiance exclusive au bord de l'eau.",
+    price:       "35",
+    tag:         "",
+    gradient:    "linear-gradient(135deg, #F4A261 0%, #fbc085 100%)",
+    featured:    false,
+  },
+];
+---
+
+<section class="events" id="evenements">
+  <div class="container">
+
+    <div class="events-header fade-up">
+      <p class="overline">Prochains événements</p>
+      <h2 class="events-title">Choisissez<br>votre soirée</h2>
+      <p class="events-sub">Des expériences exclusives conçues pour vivre l'inoubliable.</p>
+    </div>
+
+    <div class="cards-grid">
+      {events.map((ev) => (
+        <article class={`card fade-up${ev.featured ? ' card--featured' : ''}`}>
+
+          <!-- Gradient header stripe -->
+          <div class="card-stripe" style={`background: ${ev.gradient}`}>
+            <span class="card-watermark" aria-hidden="true">{ev.num}</span>
+            <div class="card-stripe-inner">
+              <span class="card-date">{ev.date}</span>
+              {ev.tag && <span class="card-tag">{ev.tag}</span>}
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body">
+            <h3 class="card-name">{ev.name}</h3>
+            <p class="card-location">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              {ev.location}
+            </p>
+            <p class="card-desc">{ev.description}</p>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer">
+            <div class="card-price-wrap">
+              <span class="card-price-label">À partir de</span>
+              <p class="card-price-row">
+                <span class="card-price">{ev.price}</span>
+                <span class="card-currency">€</span>
+              </p>
+            </div>
+            <a href="#contact" class="btn btn-primary card-btn">Réserver →</a>
+          </div>
+
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .events {
+    background: var(--cream);
+  }
+
+  .events-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .events-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: .875rem;
+    margin-bottom: 1rem;
+    letter-spacing: -.03em;
+    line-height: 1.08;
+  }
+
+  .events-sub {
+    font-size: .95rem;
+    color: var(--grey);
+    line-height: 1.7;
+  }
+
+  /* Grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform  .4s cubic-bezier(0.34, 1.2, 0.64, 1),
+      box-shadow .35s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 24px 56px rgba(26,58,92,.12),
+      0 4px 16px rgba(255,107,53,.07);
+  }
+
+  .card--featured {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+  .card--featured:hover {
+    transform: translateY(-12px);
+    box-shadow:
+      0 32px 72px rgba(26,58,92,.16),
+      0 4px 20px rgba(26,58,92,.09);
+  }
+
+  /* Stripe header */
+  .card-stripe {
+    position: relative;
+    padding: 1.5rem 1.5rem 1.25rem;
+    overflow: hidden;
+    min-height: 96px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .card-watermark {
+    position: absolute;
+    bottom: -12px;
+    left: -4px;
+    font-family: var(--font-heading);
+    font-size: 5.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(255,255,255,.13);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .card-stripe-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-date {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: rgba(255,255,255,.92);
+    letter-spacing: -.01em;
+  }
+
+  .card-tag {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(4px);
+    color: rgba(255,255,255,.95);
+    padding: .275rem .75rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,.28);
+  }
+
+  /* Body */
+  .card-body {
+    padding: 1.5rem 1.5rem 1rem;
+    flex: 1;
+  }
+
+  .card-name {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: .4rem;
+    letter-spacing: -.015em;
+    line-height: 1.2;
+  }
+
+  .card-location {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--grey);
+    margin-bottom: .875rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .card-location svg { color: var(--orange); flex-shrink: 0; }
+
+  .card-desc {
+    font-size: .875rem;
+    color: var(--grey);
+    line-height: 1.72;
+  }
+
+  /* Footer */
+  .card-footer {
+    padding: 1.125rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    background: rgba(255,250,245,.6);
+  }
+
+  .card-price-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: .05rem;
+  }
+
+  .card-price-label {
+    font-size: .68rem;
+    color: var(--grey);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .card-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: .05rem;
+    line-height: 1;
+  }
+
+  .card-price {
+    font-family: var(--font-heading);
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .card-currency {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-left: .05rem;
+  }
+
+  .card-btn {
+    padding: .6rem 1.375rem;
+    font-size: .825rem;
+    flex-shrink: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .cards-grid { grid-template-columns: 1fr 1fr; }
+    .card--featured { transform: none; }
+    .card--featured:hover { transform: translateY(-8px); }
+  }
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,197 @@
+---
+---
+
+<header class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <!-- Logo -->
+    <a href="#hero" class="nav-logo">
+      JetSet<em class="logo-boat">Boat</em>
+    </a>
+
+    <!-- Liens desktop -->
+    <nav class="nav-links" id="nav-links">
+      <a href="#evenements" class="nav-link">Événements</a>
+      <a href="#contact"    class="nav-link">Contact</a>
+      <a href="https://instagram.com/wakaboat" target="_blank" rel="noopener" class="nav-link nav-insta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+        Instagram
+      </a>
+      <a href="#contact" class="btn btn-primary nav-cta">Réserver</a>
+    </nav>
+
+    <!-- Burger mobile -->
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background   .4s ease,
+      box-shadow   .4s ease,
+      border-color .4s ease;
+  }
+
+  .navbar.scrolled {
+    background: rgba(255, 250, 245, 0.90);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    box-shadow: 0 1px 0 rgba(234,228,220,.7), 0 4px 24px rgba(26,58,92,.06);
+    border-bottom-color: rgba(234,228,220,.5);
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Logo */
+  .nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -.025em;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+  }
+  .logo-boat {
+    font-style: italic;
+    color: var(--orange);
+  }
+
+  /* Links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.25rem;
+  }
+
+  .nav-link {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--dark);
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding-bottom: 3px;
+    position: relative;
+    transition: color var(--transition);
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--orange);
+    border-radius: 2px;
+    transition: width .3s ease;
+  }
+  .nav-link:hover {
+    color: var(--orange);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-insta svg {
+    opacity: .7;
+    transition: opacity var(--transition);
+  }
+  .nav-insta:hover svg { opacity: 1; }
+
+  /* Burger */
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .burger { display: flex; }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 72px;
+      left: 0; right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      background: rgba(255,250,245,.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: .75rem 24px 1.5rem;
+      box-shadow: 0 8px 32px rgba(26,58,92,.10);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-links.open { display: flex; }
+
+    .nav-link {
+      padding: .875rem 0;
+      width: 100%;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-link::after { display: none; }
+    .nav-cta { margin-top: 1rem; align-self: flex-start; }
+  }
+</style>
+
+<script>
+  const navbar   = document.getElementById('navbar');
+  const burger   = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  burger.addEventListener('click', () => {
+    const open = burger.classList.toggle('open');
+    navLinks.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      burger.classList.remove('open');
+      navLinks.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "PowerShell(claude mcp *)",
+      "PowerShell(head *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Aymeric\\\\jetsetboat\\\\src\" -Recurse | Select-Object -Property FullName, @{Name=\"Size\";Expression={if\\($_.PSIsContainer\\){\"DIR\"}else{$_.Length}}})",
+      "PowerShell(New-Item *)",
+      "WebFetch(domain:localhost)",
+      "PowerShell(Start-Process \"http://localhost:4321/\")",
+      "PowerShell(Get-Content *)",
+      "PowerShell(Test-Path *)",
+      "WebSearch",
+      "WebFetch(domain:21st.dev)",
+      "mcp__magic__21st_magic_component_inspiration",
+      "mcp__magic__21st_magic_component_refiner",
+      "PowerShell(cd C:\\\\Users\\\\Aymeric\\\\jetsetboat; Start-Process powershell -ArgumentList \"-NoProfile -Command `\"npm run dev`\"\" -WindowStyle Minimized; Start-Sleep -Seconds 3; Write-Host \"Dev server started on http://localhost:4321\")",
+      "PowerShell(Get-Command *)",
+      "PowerShell(winget install *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "magic"
+  ]
+}

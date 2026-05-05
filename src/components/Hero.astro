@@ -1,0 +1,210 @@
+---
+---
+
+<section class="hero" id="hero">
+
+  <!-- Gradient orbs -->
+  <div class="orb orb-orange" aria-hidden="true"></div>
+  <div class="orb orb-coral"  aria-hidden="true"></div>
+  <div class="orb orb-navy"   aria-hidden="true"></div>
+
+  <!-- Floating dots -->
+  <div class="hero-dots" aria-hidden="true">
+    <span class="dot dot-1"></span>
+    <span class="dot dot-2"></span>
+    <span class="dot dot-3"></span>
+    <span class="dot dot-4"></span>
+    <span class="dot dot-5"></span>
+  </div>
+
+  <div class="container hero-content">
+    <p class="overline fade-up">Côte d'Azur &nbsp;·&nbsp; Beach &amp; Boat Parties</p>
+
+    <h1 class="hero-title fade-up">
+      Plus qu'une soirée&nbsp;—<br>
+      <em class="hero-em">une expérience.</em>
+    </h1>
+
+    <p class="hero-sub fade-up">
+      Rejoignez les soirées nautiques les plus exclusives de la Côte d'Azur.
+      Musique live, horizon sans fin et moments inoubliables.
+    </p>
+
+    <div class="hero-actions fade-up">
+      <a href="#contact"    class="btn btn-primary">Réserver ma place &rarr;</a>
+      <a href="#evenements" class="btn btn-outline">Voir les événements</a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-hint" aria-hidden="true">
+    <span class="scroll-label">Défiler</span>
+    <div class="scroll-track"><div class="scroll-cursor"></div></div>
+  </div>
+
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 72px;
+    background: var(--cream);
+    overflow: hidden;
+  }
+
+  /* Gradient orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+  }
+  .orb-orange {
+    top: -8%;
+    right: -10%;
+    width: 640px;
+    height: 640px;
+    background: radial-gradient(circle, rgba(255,107,53,.22) 0%, transparent 68%);
+  }
+  .orb-coral {
+    bottom: 5%;
+    right: 18%;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(244,162,97,.18) 0%, transparent 68%);
+    animation: floatOrb 9s ease-in-out infinite;
+  }
+  .orb-navy {
+    top: 25%;
+    left: -8%;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(26,58,92,.09) 0%, transparent 68%);
+    animation: floatOrb 12s ease-in-out infinite reverse;
+  }
+
+  @keyframes floatOrb {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-24px); }
+  }
+
+  /* Floating dots */
+  .hero-dots { position: absolute; inset: 0; pointer-events: none; }
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: floatDot 6s ease-in-out infinite;
+  }
+  .dot-1 { width: 6px; height: 6px; top: 22%; right: 28%; opacity: .18; animation-delay: 0s; }
+  .dot-2 { width: 4px; height: 4px; top: 62%; right: 22%; opacity: .12; animation-delay: 1.5s; }
+  .dot-3 { width: 8px; height: 8px; top: 38%; right: 44%; opacity: .10; animation-delay: .8s; }
+  .dot-4 { width: 5px; height: 5px; top: 78%; right: 36%; opacity: .14; animation-delay: 2.2s; }
+  .dot-5 { width: 4px; height: 4px; top: 52%; right: 58%; opacity: .10; animation-delay: .4s; }
+
+  @keyframes floatDot {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+  }
+
+  /* Content */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding-top: 2rem;
+    padding-bottom: 5rem;
+  }
+
+  .overline { margin-bottom: 1.75rem; }
+
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.75rem, 6.5vw, 5rem);
+    font-weight: 700;
+    line-height: 1.08;
+    color: var(--dark);
+    margin-bottom: 1.75rem;
+    letter-spacing: -.03em;
+  }
+
+  .hero-em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--navy) 0%, #2a5f8f 60%, var(--navy) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--grey);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    max-width: 520px;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--coral);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+    z-index: 1;
+  }
+  .scroll-label {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--grey);
+    opacity: .6;
+  }
+  .scroll-track {
+    width: 1px;
+    height: 44px;
+    background: rgba(107,114,128,.2);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .scroll-cursor {
+    width: 100%;
+    height: 14px;
+    background: var(--orange);
+    border-radius: 2px;
+    animation: scrollDown 2s ease-in-out infinite;
+  }
+  @keyframes scrollDown {
+    0%   { transform: translateY(-14px); opacity: 0; }
+    25%  { opacity: 1; }
+    75%  { opacity: 1; }
+    100% { transform: translateY(44px); opacity: 0; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-actions { flex-direction: column; }
+    .hero-actions .btn { text-align: center; justify-content: center; }
+    .orb-orange { width: 320px; height: 320px; right: -25%; }
+    .orb-coral  { width: 220px; height: 220px; }
+    .orb-navy   { width: 200px; height: 200px; }
+    .scroll-hint { display: none; }
+    .hero-dots  { display: none; }
+  }
+</style>
