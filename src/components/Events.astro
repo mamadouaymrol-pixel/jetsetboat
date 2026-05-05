@@ -1,39 +1,12 @@
 ---
-const events = [
-  {
-    num:         "01",
-    date:        "14 Juin",
-    name:        "JetSet Sunset",
-    location:    "Saint-Tropez",
-    description: "Sunset & deep house sur le pont. Coucher de soleil face à la mer avec les meilleurs DJs de la Côte.",
-    price:       "45",
-    tag:         "Populaire",
-    gradient:    "linear-gradient(135deg, #FF6B35 0%, #F4A261 100%)",
-    featured:    false,
-  },
-  {
-    num:         "02",
-    date:        "28 Juin",
-    name:        "JetSet VIP",
-    location:    "Monaco",
-    description: "Soirée privée, champagne & DJ set. L'expérience ultime en Principauté, places très limitées.",
-    price:       "95",
-    tag:         "VIP",
-    gradient:    "linear-gradient(135deg, #1A3A5C 0%, #2a5f94 100%)",
-    featured:    true,
-  },
-  {
-    num:         "03",
-    date:        "13 Sept",
-    name:        "JetSet Beach White",
-    location:    "Cannes",
-    description: "All white party sur la plage. Dress code blanc obligatoire, ambiance exclusive au bord de l'eau.",
-    price:       "35",
-    tag:         "",
-    gradient:    "linear-gradient(135deg, #F4A261 0%, #fbc085 100%)",
-    featured:    false,
-  },
-];
+import { getCollection } from 'astro:content';
+
+const allEvents = await getCollection('events');
+const events = allEvents.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+}
 ---
 
 <section class="events" id="evenements">
@@ -46,37 +19,33 @@ const events = [
     </div>
 
     <div class="cards-grid">
-      {events.map((ev) => (
-        <article class={`card fade-up${ev.featured ? ' card--featured' : ''}`}>
+      {events.map((ev, i) => (
+        <article class={`card fade-up${ev.data.featured ? ' card--featured' : ''}`}>
 
-          <!-- Gradient header stripe -->
-          <div class="card-stripe" style={`background: ${ev.gradient}`}>
-            <span class="card-watermark" aria-hidden="true">{ev.num}</span>
+          <div class="card-stripe" style={`background-image: url('${ev.data.image}')`}>
+            <span class="card-watermark" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <div class="card-stripe-inner">
-              <span class="card-date">{ev.date}</span>
-              {ev.tag && <span class="card-tag">{ev.tag}</span>}
+              <span class="card-date">{formatDate(ev.data.date)}</span>
             </div>
           </div>
 
-          <!-- Body -->
           <div class="card-body">
-            <h3 class="card-name">{ev.name}</h3>
+            <h3 class="card-name">{ev.data.title}</h3>
             <p class="card-location">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
-              {ev.location}
+              {ev.data.location}
             </p>
-            <p class="card-desc">{ev.description}</p>
+            <p class="card-desc">{ev.data.description}</p>
           </div>
 
-          <!-- Footer -->
           <div class="card-footer">
             <div class="card-price-wrap">
               <span class="card-price-label">À partir de</span>
               <p class="card-price-row">
-                <span class="card-price">{ev.price}</span>
+                <span class="card-price">{ev.data.price}</span>
                 <span class="card-currency">€</span>
               </p>
             </div>
@@ -185,6 +154,16 @@ const events = [
     min-height: 96px;
     display: flex;
     align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .card-stripe::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,58,92,0.72) 0%, rgba(13,17,23,0.88) 100%);
+    z-index: 0;
   }
 
   .card-watermark {
@@ -198,6 +177,7 @@ const events = [
     color: rgba(255,255,255,.13);
     pointer-events: none;
     user-select: none;
+    z-index: 1;
   }
 
   .card-stripe-inner {
@@ -215,19 +195,6 @@ const events = [
     font-weight: 700;
     color: rgba(255,255,255,.92);
     letter-spacing: -.01em;
-  }
-
-  .card-tag {
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    background: rgba(255,255,255,.18);
-    backdrop-filter: blur(4px);
-    color: rgba(255,255,255,.95);
-    padding: .275rem .75rem;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,.28);
   }
 
   /* Body */

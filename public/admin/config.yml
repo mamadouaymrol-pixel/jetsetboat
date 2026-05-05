@@ -1,0 +1,29 @@
+backend:
+  name: git-gateway
+  branch: master
+
+media_folder: public/images/events
+public_folder: /images/events
+
+locale: fr
+
+collections:
+  - name: events
+    label: Événements
+    label_singular: Événement
+    folder: src/content/events
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Titre, name: title, widget: string }
+      - label: Date
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "DD/MM/YYYY"
+        time_format: false
+      - { label: Lieu, name: location, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Image, name: image, widget: image }
+      - { label: "Prix minimum (€)", name: price, widget: number, value_type: int, hint: "Prix en euros, sans symbole. Ex: 45" }
+      - { label: "Événement vedette", name: featured, widget: boolean, default: false, required: false }
