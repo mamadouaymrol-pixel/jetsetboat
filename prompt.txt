@@ -1,0 +1,43 @@
+CREATE src/pages/mentions-legales.astro
+Use same Layout, Navbar and Footer as index.astro.
+Style the page with clean typography, generous padding, 
+Playfair Display for titles, Inter for body text.
+
+CONTENT:
+
+MENTIONS LÉGALES
+
+1. Éditeur du site
+Nom : Mayeul Gallian
+Statut : Auto-entrepreneur
+SIRET : 914 085 691 00014
+Code APE : 9329Z — Autres activités récréatives et de loisirs
+Email : contact@jetsetboat.fr
+Téléphone : +33 6 98 92 50 61
+
+2. Hébergement
+Hébergeur : OVH SAS
+Siège social : 2 rue Kellermann, 59100 Roubaix, France
+Site : www.ovh.com
+
+3. Propriété intellectuelle
+L'ensemble du contenu de ce site (textes, images, graphismes, 
+logo) est la propriété exclusive de Mayeul Gallian. 
+Toute reproduction, distribution ou utilisation sans 
+autorisation préalable écrite est interdite.
+
+4. Responsabilité
+Mayeul Gallian ne saurait être tenu responsable des dommages 
+directs ou indirects résultant de l'utilisation de ce site 
+ou de l'impossibilité d'y accéder.
+
+5. Droit applicable
+Le présent site est soumis au droit français. 
+Tout litige sera soumis aux tribunaux compétents français.
+
+6. Médiation
+En cas de litige, le consommateur peut recourir à une 
+médiation conventionnelle. Plateforme européenne de 
+règlement des litiges : https://ec.europa.eu/consumers/odr
+
+Dernière mise à jour : Mai 2025

@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar  from '../components/Navbar.astro';
+import Footer  from '../components/Footer.astro';
+---
+
+<Layout
+  title="Mentions légales — JetSetBoat"
+  description="Mentions légales du site JetSetBoat, soirées nautiques sur la Côte d'Azur."
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="container legal-container">
+
+      <header class="legal-header">
+        <p class="overline">Informations légales</p>
+        <h1 class="legal-title">Mentions légales</h1>
+        <p class="legal-update">Dernière mise à jour : Mai 2025</p>
+      </header>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>1. Éditeur du site</h2>
+          <ul>
+            <li><strong>Nom :</strong> Mayeul Gallian</li>
+            <li><strong>Statut :</strong> Auto-entrepreneur</li>
+            <li><strong>SIRET :</strong> 914 085 691 00014</li>
+            <li><strong>Code APE :</strong> 9329Z — Autres activités récréatives et de loisirs</li>
+            <li><strong>Email :</strong> <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></li>
+            <li><strong>Téléphone :</strong> <a href="tel:+33698925061">+33 6 98 92 50 61</a></li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Hébergement</h2>
+          <ul>
+            <li><strong>Hébergeur :</strong> OVH SAS</li>
+            <li><strong>Siège social :</strong> 2 rue Kellermann, 59100 Roubaix, France</li>
+            <li><strong>Site :</strong> <a href="https://www.ovh.com" target="_blank" rel="noopener">www.ovh.com</a></li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Propriété intellectuelle</h2>
+          <p>L'ensemble du contenu de ce site (textes, images, graphismes, logo) est la propriété exclusive de Mayeul Gallian. Toute reproduction, distribution ou utilisation sans autorisation préalable écrite est interdite.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Responsabilité</h2>
+          <p>Mayeul Gallian ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation de ce site ou de l'impossibilité d'y accéder.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Droit applicable</h2>
+          <p>Le présent site est soumis au droit français. Tout litige sera soumis aux tribunaux compétents français.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Médiation</h2>
+          <p>En cas de litige, le consommateur peut recourir à une médiation conventionnelle. Plateforme européenne de règlement des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a></p>
+        </section>
+
+      </div>
+
+      <div class="legal-back">
+        <a href="/" class="btn btn-outline">&larr; Retour au site</a>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    background: var(--cream);
+    min-height: 100vh;
+    padding-top: 72px;
+  }
+
+  .legal-container {
+    max-width: 760px;
+    padding-top: 5rem;
+    padding-bottom: 6rem;
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .legal-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: .75rem;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+  }
+
+  .legal-update {
+    margin-top: .75rem;
+    font-size: .82rem;
+    color: var(--grey);
+  }
+
+  /* Sections */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .legal-section h2 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: .875rem;
+    letter-spacing: -.01em;
+  }
+
+  .legal-section p {
+    font-size: .95rem;
+    color: var(--grey);
+    line-height: 1.8;
+  }
+
+  .legal-section ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .legal-section li {
+    font-size: .95rem;
+    color: var(--grey);
+    line-height: 1.6;
+  }
+
+  .legal-section strong {
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  .legal-section a {
+    color: var(--orange);
+    transition: color var(--transition);
+  }
+  .legal-section a:hover { color: #e85a24; }
+
+  /* Back link */
+  .legal-back {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

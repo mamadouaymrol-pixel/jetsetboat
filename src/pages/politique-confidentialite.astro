@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar  from '../components/Navbar.astro';
+import Footer  from '../components/Footer.astro';
+---
+
+<Layout
+  title="Politique de confidentialité — JetSetBoat"
+  description="Politique de confidentialité et protection des données personnelles de JetSetBoat."
+>
+  <Navbar />
+
+  <main class="legal-page">
+    <div class="container legal-container">
+
+      <header class="legal-header">
+        <p class="overline">Protection des données</p>
+        <h1 class="legal-title">Politique de confidentialité</h1>
+        <p class="legal-update">Dernière mise à jour : Mai 2025</p>
+      </header>
+
+      <div class="legal-body">
+
+        <section class="legal-section">
+          <h2>Responsable du traitement</h2>
+          <p>Mayeul Gallian — JetSetBoat<br>
+          <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Données collectées</h2>
+          <p>Nom, prénom, adresse email et message via le formulaire de contact uniquement.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Finalité</h2>
+          <p>Répondre aux demandes de contact et de réservation.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Durée de conservation</h2>
+          <p>Les données sont conservées 3 ans maximum.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Vos droits (RGPD)</h2>
+          <p>Vous disposez d'un droit d'accès, de rectification et de suppression de vos données.<br>
+          Pour exercer ces droits : <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Cookies</h2>
+          <p>Ce site n'utilise pas de cookies de tracking.</p>
+        </section>
+
+      </div>
+
+      <div class="legal-back">
+        <a href="/" class="btn btn-outline">&larr; Retour au site</a>
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    background: var(--cream);
+    min-height: 100vh;
+    padding-top: 72px;
+  }
+
+  .legal-container {
+    max-width: 760px;
+    padding-top: 5rem;
+    padding-bottom: 6rem;
+  }
+
+  /* Header */
+  .legal-header {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .legal-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: .75rem;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+  }
+
+  .legal-update {
+    margin-top: .75rem;
+    font-size: .82rem;
+    color: var(--grey);
+  }
+
+  /* Sections */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .legal-section h2 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: .875rem;
+    letter-spacing: -.01em;
+  }
+
+  .legal-section p {
+    font-size: .95rem;
+    color: var(--grey);
+    line-height: 1.8;
+  }
+
+  .legal-section a {
+    color: var(--orange);
+    transition: color var(--transition);
+  }
+  .legal-section a:hover { color: #e85a24; }
+
+  /* Back link */
+  .legal-back {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
