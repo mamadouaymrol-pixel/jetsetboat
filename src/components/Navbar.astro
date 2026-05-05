@@ -44,19 +44,18 @@
   }
 
   .navbar.scrolled {
-    background: rgba(255, 250, 245, 0.90);
+    background: rgba(13, 17, 23, 0.92);
     backdrop-filter: blur(20px) saturate(1.8);
     -webkit-backdrop-filter: blur(20px) saturate(1.8);
-    box-shadow: 0 1px 0 rgba(234,228,220,.7), 0 4px 24px rgba(26,58,92,.06);
-    border-bottom-color: rgba(234,228,220,.5);
+    box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 4px 24px rgba(0,0,0,.3);
+    border-bottom-color: rgba(255,255,255,.06);
   }
 
-  /* White navbar over the hero photo (transparent state) */
-  .navbar:not(.scrolled) .nav-logo  { color: #ffffff; }
-  .navbar:not(.scrolled) .logo-boat { color: var(--orange); }
-  .navbar:not(.scrolled) .nav-link  { color: rgba(255,255,255,.88); }
-  .navbar:not(.scrolled) .nav-link:hover { color: #ffffff; }
-  .navbar:not(.scrolled) .burger span    { background: #ffffff; }
+  /* White navbar — always (both hero and dark scrolled state) */
+  .nav-logo  { color: #F0EDE8; }
+  .nav-link  { color: rgba(255,255,255,.8); }
+  .nav-link:hover { color: #ffffff; }
+  .burger span { background: #F0EDE8; }
 
   .nav-container {
     max-width: 1200px;
@@ -160,12 +159,12 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0;
-      background: rgba(255,250,245,.97);
+      background: rgba(13,17,23,.97);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: .75rem 24px 1.5rem;
-      box-shadow: 0 8px 32px rgba(26,58,92,.10);
-      border-bottom: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
     .nav-links.open { display: flex; }
 

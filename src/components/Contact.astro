@@ -115,12 +115,12 @@
     z-index: 0;
   }
 
-  /* Cream softening overlay so text stays readable */
+  /* Dark softening overlay */
   .contact::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255, 250, 245, 0.45);
+    background: rgba(0, 0, 0, 0.55);
     pointer-events: none;
     z-index: 0;
   }
@@ -214,12 +214,12 @@
     align-items: center;
     gap: .65rem;
     padding: .65rem 1.1rem;
-    background: rgba(26,58,92,.04);
-    border: 1px solid rgba(26,58,92,.09);
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
     border-radius: 50px;
     font-size: .8rem;
     font-weight: 500;
-    color: var(--navy);
+    color: rgba(255,255,255,.85);
   }
 
   .response-dot {
@@ -238,11 +238,12 @@
 
   /* Form card */
   .form-card {
-    background: var(--cream);
-    border: 1px solid var(--border);
+    background: rgba(26, 35, 50, 0.95);
+    border: 1px solid rgba(255,255,255,.10);
     border-radius: var(--radius);
     padding: 2.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 8px 40px rgba(0,0,0,.5);
+    backdrop-filter: blur(12px);
   }
 
   .contact-form {
@@ -266,7 +267,7 @@
   label {
     font-size: .78rem;
     font-weight: 700;
-    color: var(--dark);
+    color: rgba(255,255,255,.6);
     letter-spacing: .04em;
     text-transform: uppercase;
   }
@@ -274,9 +275,9 @@
   input, textarea {
     font-family: var(--font-body);
     font-size: .95rem;
-    color: var(--dark);
-    background: var(--white);
-    border: 1.5px solid var(--border);
+    color: #F0EDE8;
+    background: #0D1117;
+    border: 1.5px solid rgba(255,255,255,.12);
     border-radius: var(--radius-sm);
     padding: .8rem 1rem;
     transition: border-color .25s ease, box-shadow .25s ease;
@@ -284,12 +285,12 @@
     width: 100%;
   }
 
-  input::placeholder, textarea::placeholder { color: #B5BECC; }
+  input::placeholder, textarea::placeholder { color: rgba(255,255,255,.35); }
 
   input:focus, textarea:focus {
     outline: none;
     border-color: var(--orange);
-    box-shadow: 0 0 0 4px rgba(255,107,53,.10);
+    box-shadow: 0 0 0 4px rgba(255,107,53,.15);
   }
 
   .submit-btn {

@@ -1,35 +1,67 @@
-Redesign the site background to reduce eye strain and add 
-visual depth. Currently everything is flat white #FFFAF5 
-which is too harsh.
+MAJOR REDESIGN: Switch to dark elegant theme to match 
+the hero photo mood. The site must feel cohesive from 
+top to bottom - dark, premium, mediterranean night.
 
-Apply these changes across all sections:
+1. GLOBAL COLOR SCHEME - go dark:
+Change CSS variables in global.css:
+- --cream: #0D1117 (near black, main background)
+- --white: #141920 (card backgrounds)
+- --dark: #F0EDE8 (main text, was dark now light)
+- --grey: #9BA3AF (secondary text)
+- --border: rgba(255,255,255,0.08) (subtle borders)
+- --light: #0D1117
+Keep --orange, --coral, --navy unchanged.
 
-1. GLOBAL - alternate section backgrounds:
-- Hero: keep photo background (unchanged)
-- Notre Univers: background #FFF8F0 (warm sand, very subtle)
-- Events: add a very subtle texture using CSS:
-  background: #FFFAF5 with a radial-gradient overlay
-  radial-gradient(ellipse at 20% 50%, rgba(244,162,97,0.06) 0%, transparent 60%),
-  radial-gradient(ellipse at 80% 20%, rgba(255,107,53,0.04) 0%, transparent 50%)
-- Testimonials: background #F7F3EE (warm beige, distinct from white)
+2. NAVBAR - dark mode:
+- Scrolled state: background rgba(13,17,23,0.92) 
+  with backdrop-filter blur(20px)
+- Links color: rgba(255,255,255,0.85)
+- Logo: white + orange italic
+
+3. HERO - no change, already perfect
+
+4. ALL SECTIONS backgrounds:
+- Notre Univers: #0D1117
+- Events: #111820 with very subtle 
+  radial-gradient(ellipse at 30% 50%, 
+  rgba(255,107,53,0.05) 0%, transparent 60%)
+- Testimonials: #0D1117
 - Ambiance: keep photo (unchanged)
-- Contact: keep photo background (unchanged)
-- Footer: keep #1A3A5C (unchanged)
+- Contact: keep photo with darker overlay rgba(0,0,0,0.55)
+- Footer: #060A10 (darker than before)
 
-2. ADD subtle decorative elements:
-- A very faint orange blob (opacity 3%) top-right of Events section
-- A very faint navy blob (opacity 3%) bottom-left of Testimonials
+5. CARDS - dark style:
+- Event cards: background #1A2332, 
+  border: 1px solid rgba(255,255,255,0.08)
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4)
+- Card text: white and light grey
+- Card price: --orange color
+- Testimonial cards: background #1A2332,
+  same border treatment
 
-3. TYPOGRAPHY contrast improvement:
-- All body text: color #2D2D2D instead of #111827 
-  (slightly softer than pure black)
-- Section subtitles: color #6B6B6B instead of #6B7280
-- Increase line-height on body text to 1.8
+6. CONTACT FORM - dark:
+- Form card: background rgba(26,35,50,0.95)
+- Inputs: background #0D1117, 
+  border rgba(255,255,255,0.12),
+  text white, placeholder rgba(255,255,255,0.35)
+- Labels: rgba(255,255,255,0.6)
 
-4. MENTIONS LEGALES and POLITIQUE pages:
-- Background #FFF8F3 instead of white
-- Body text #2D2D2D
-- Section titles color var(--navy)
-- Add left border accent orange on each section:
-  border-left: 3px solid var(--orange), padding-left: 1.5rem
-- Reduce gaps between sections to 2.5rem max
+7. MENTIONS LEGALES + POLITIQUE pages:
+- Background #0D1117
+- Text #F0EDE8
+- Section borders: rgba(255,107,53,0.3)
+- Links: --orange color
+
+8. Use 21st.dev MCP to find and apply:
+- Premium dark scroll animations 
+- Staggered card entrance animations
+- Smooth text reveal effects
+- Parallax depth effects on sections
+- Magnetic hover effects on buttons
+Search: "dark premium animations scroll reveal"
+Search: "magnetic button hover effect dark"
+Search: "staggered grid animation dark theme"
+Apply the best patterns found to all components.
+
+Do not change any text content or images.
+Commit with message "feat: dark theme + premium animations"
