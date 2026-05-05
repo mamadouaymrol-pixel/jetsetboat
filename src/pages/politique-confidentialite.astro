@@ -16,41 +16,60 @@ import Footer  from '../components/Footer.astro';
       <header class="legal-header">
         <p class="overline">Protection des données</p>
         <h1 class="legal-title">Politique de confidentialité</h1>
-        <p class="legal-update">Dernière mise à jour : Mai 2025</p>
+        <p class="legal-update">Mise à jour : Mai 2025</p>
       </header>
 
       <div class="legal-body">
 
         <section class="legal-section">
-          <h2>Responsable du traitement</h2>
-          <p>Mayeul Gallian — JetSetBoat<br>
-          <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></p>
+          <h2>1. Responsable du traitement</h2>
+          <p>
+            Mayeul Gallian<br>
+            <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a><br>
+            <a href="tel:+33698925061">+33 6 98 92 50 61</a>
+          </p>
         </section>
 
         <section class="legal-section">
-          <h2>Données collectées</h2>
-          <p>Nom, prénom, adresse email et message via le formulaire de contact uniquement.</p>
+          <h2>2. Données collectées</h2>
+          <p>Nom, prénom, email et message via formulaire de contact uniquement.</p>
         </section>
 
         <section class="legal-section">
-          <h2>Finalité</h2>
+          <h2>3. Finalité</h2>
           <p>Répondre aux demandes de contact et de réservation.</p>
         </section>
 
         <section class="legal-section">
-          <h2>Durée de conservation</h2>
-          <p>Les données sont conservées 3 ans maximum.</p>
+          <h2>4. Durée de conservation</h2>
+          <p>3 ans maximum après le dernier contact.</p>
         </section>
 
         <section class="legal-section">
-          <h2>Vos droits (RGPD)</h2>
-          <p>Vous disposez d'un droit d'accès, de rectification et de suppression de vos données.<br>
-          Pour exercer ces droits : <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></p>
+          <h2>5. Vos droits RGPD</h2>
+          <p>
+            Droit d'accès, rectification, suppression et opposition.<br>
+            Pour exercer vos droits : <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a><br>
+            Réponse sous 30 jours.
+          </p>
         </section>
 
         <section class="legal-section">
-          <h2>Cookies</h2>
-          <p>Ce site n'utilise pas de cookies de tracking.</p>
+          <h2>6. Sécurité</h2>
+          <p>
+            Les données sont transmises via protocole HTTPS sécurisé.<br>
+            Aucune donnée n'est vendue ou transmise à des tiers.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Cookies</h2>
+          <p>Ce site n'utilise pas de cookies de tracking ou publicitaires.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Contact DPO</h2>
+          <p>Pour toute question : <a href="mailto:contact@jetsetboat.fr">contact@jetsetboat.fr</a></p>
         </section>
 
       </div>
@@ -78,7 +97,6 @@ import Footer  from '../components/Footer.astro';
     padding-bottom: 6rem;
   }
 
-  /* Header */
   .legal-header {
     margin-bottom: 3.5rem;
     padding-bottom: 2rem;
@@ -101,7 +119,6 @@ import Footer  from '../components/Footer.astro';
     color: var(--grey);
   }
 
-  /* Sections */
   .legal-body {
     display: flex;
     flex-direction: column;
@@ -129,7 +146,6 @@ import Footer  from '../components/Footer.astro';
   }
   .legal-section a:hover { color: #e85a24; }
 
-  /* Back link */
   .legal-back {
     margin-top: 3.5rem;
     padding-top: 2rem;
