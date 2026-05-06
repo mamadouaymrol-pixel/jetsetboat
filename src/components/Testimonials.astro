@@ -1,5 +1,5 @@
 ---
-// All review data loaded client-side from /reviews.json
+// Reviews loaded client-side from /reviews.json
 ---
 
 <section class="testimonials" id="avis">
@@ -10,56 +10,54 @@
       <h2 class="testi-title">Ce qu'ils en disent</h2>
     </div>
 
-    <!-- Carousel -->
     <div class="carousel-outer fade-up" id="carouselOuter">
       <div class="carousel-track" id="carouselTrack"></div>
     </div>
-    <p class="no-reviews" id="noReviews" style="display:none">
+    <p class="rv-empty-msg" id="noReviews" style="display:none">
       Soyez le premier à partager votre expérience !
     </p>
 
     <!-- Formulaire inline -->
-    <div class="review-form-wrap fade-up">
-      <div class="rfr-header">
+    <div class="rv-form-wrap fade-up">
+      <div class="rv-form-header">
         <p class="overline">Votre expérience</p>
-        <h3 class="rfr-title">Partagez votre avis</h3>
+        <h3 class="rv-form-title">Partagez votre avis</h3>
       </div>
 
-      <form id="reviewForm" class="review-form" novalidate>
-        <div class="rf-row">
-          <div class="rf-group">
-            <label for="rf-prenom">Prénom <span class="req">*</span></label>
+      <form id="reviewForm" class="rv-form" novalidate>
+        <div class="rv-form-row">
+          <div class="rv-field">
+            <label for="rf-prenom">Prénom <span class="rv-req">*</span></label>
             <input type="text" id="rf-prenom" name="prenom" required placeholder="Sophie" autocomplete="given-name">
           </div>
-          <div class="rf-group">
-            <label for="rf-nom">Nom <span class="req">*</span></label>
+          <div class="rv-field">
+            <label for="rf-nom">Nom <span class="rv-req">*</span></label>
             <input type="text" id="rf-nom" name="nom" required placeholder="Martin" autocomplete="family-name">
           </div>
         </div>
 
-        <div class="rf-group">
-          <label>Note <span class="req">*</span></label>
-          <div class="star-picker" id="starPicker" role="group" aria-label="Votre note">
-            <button type="button" class="star-btn" data-value="1" aria-label="1 étoile">★</button>
-            <button type="button" class="star-btn" data-value="2" aria-label="2 étoiles">★</button>
-            <button type="button" class="star-btn" data-value="3" aria-label="3 étoiles">★</button>
-            <button type="button" class="star-btn" data-value="4" aria-label="4 étoiles">★</button>
-            <button type="button" class="star-btn" data-value="5" aria-label="5 étoiles">★</button>
+        <div class="rv-field">
+          <label>Note <span class="rv-req">*</span></label>
+          <div class="rv-star-picker" id="starPicker" role="group" aria-label="Votre note">
+            <button type="button" class="rv-star-btn" data-value="1" aria-label="1 étoile">★</button>
+            <button type="button" class="rv-star-btn" data-value="2" aria-label="2 étoiles">★</button>
+            <button type="button" class="rv-star-btn" data-value="3" aria-label="3 étoiles">★</button>
+            <button type="button" class="rv-star-btn" data-value="4" aria-label="4 étoiles">★</button>
+            <button type="button" class="rv-star-btn" data-value="5" aria-label="5 étoiles">★</button>
           </div>
           <input type="hidden" id="rf-rating" name="rating" value="0">
         </div>
 
-        <div class="rf-group">
-          <label for="rf-comment">Commentaire <span class="req">*</span></label>
+        <div class="rv-field">
+          <label for="rf-comment">Commentaire <span class="rv-req">*</span></label>
           <textarea id="rf-comment" name="comment" required rows="4" placeholder="Décrivez votre expérience à bord..."></textarea>
         </div>
 
-        <!-- Honeypot -->
         <input type="text" name="website" style="display:none" tabindex="-1" aria-hidden="true">
 
-        <div class="rf-footer">
+        <div class="rv-form-footer">
           <button type="submit" class="btn btn-primary" id="rfSubmitBtn">Soumettre mon avis</button>
-          <p id="rf-feedback" class="rf-feedback" aria-live="polite" style="display:none"></p>
+          <p id="rf-feedback" class="rv-feedback" aria-live="polite" style="display:none"></p>
         </div>
       </form>
     </div>
@@ -67,7 +65,9 @@
   </div>
 </section>
 
-<style>
+<!-- is:global car les cartes sont injectées par JS et échappent au scoping Astro -->
+<style is:global>
+
   /* ── Section ──────────────────────────────────────────────── */
   .testimonials {
     background: #0D1117;
@@ -98,121 +98,129 @@
     line-height: 1.1;
   }
 
-  /* ── Carousel wrapper ─────────────────────────────────────── */
+  /* ── Carousel outer ───────────────────────────────────────── */
   .carousel-outer {
     overflow: hidden;
-    position: relative;
-    margin: 0 -24px;          /* bleed past container padding */
+    margin: 0 -24px;
     margin-bottom: 4rem;
-    /* Fade edges */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
     mask-image:         linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+
+  /* ── Carousel track + animation ───────────────────────────── */
+  @keyframes rv-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 
   .carousel-track {
     display: flex;
     width: max-content;
-    will-change: transform;
+    animation: rv-scroll 36s linear infinite;
+  }
+  .carousel-outer:hover .carousel-track {
+    animation-play-state: paused;
   }
 
-  /* ── Card — style calqué sur les cartes événements ─────────── */
-  .testi-card {
+  /* ── Carte avis ───────────────────────────────────────────── */
+  .rv-card {
     width: 360px;
-    margin-right: 1.5rem;   /* gap-as-margin for clean -50% math */
     flex-shrink: 0;
-    background: rgba(0,0,0,0.60);
+    margin-right: 1.5rem;
+    background: rgba(0, 0, 0, 0.60);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border-radius: var(--radius);
+    border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    cursor: default;
   }
 
-  .tc-body {
-    padding: 1.5rem 1.5rem 1.25rem;
+  .rv-card-body {
+    padding: 1.5rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: .875rem;
+    gap: 1rem;
   }
 
-  /* Étoiles */
-  .tc-stars {
-    color: var(--orange);
-    font-size: 1rem;
-    letter-spacing: .12em;
+  .rv-card-stars {
+    color: #FF6B35;
+    font-size: 1.05rem;
+    letter-spacing: .1em;
     line-height: 1;
   }
-  .tc-stars .dim { opacity: .25; }
+  .rv-card-stars .rv-star-dim { opacity: .22; }
 
-  /* Commentaire */
-  .tc-comment {
-    font-family: var(--font-heading);
+  .rv-card-comment {
+    font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
     font-size: .9rem;
-    color: rgba(255,255,255,.75);
+    color: rgba(255, 255, 255, 0.78);
     line-height: 1.72;
     flex: 1;
   }
 
-  /* Footer auteur */
-  .tc-footer {
+  .rv-card-sep {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  .rv-card-footer {
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
     gap: .75rem;
-    border-top: 1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.25);
+    background: rgba(0, 0, 0, 0.25);
   }
 
-  .tc-avatar {
-    width: 38px;
-    height: 38px;
+  .rv-card-avatar {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-heading);
-    font-size: .78rem;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: .75rem;
     font-weight: 700;
     color: #fff;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 
-  .tc-name {
+  .rv-card-name {
     font-size: .875rem;
     font-weight: 600;
-    color: rgba(255,255,255,.85);
-    letter-spacing: .01em;
+    color: rgba(255, 255, 255, 0.85);
   }
 
-  /* Aucun avis */
-  .no-reviews {
+  /* ── Aucun avis ───────────────────────────────────────────── */
+  .rv-empty-msg {
     text-align: center;
-    color: rgba(240,237,232,.45);
+    color: rgba(240, 237, 232, 0.45);
     font-style: italic;
     margin-bottom: 3rem;
   }
 
   /* ── Formulaire ───────────────────────────────────────────── */
-  .review-form-wrap {
+  .rv-form-wrap {
     max-width: 640px;
     margin: 0 auto;
-    background: #1A2332;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-top: 2px solid rgba(255,107,53,.25);
-    border-radius: var(--radius);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 2px solid rgba(255, 107, 53, 0.35);
+    border-radius: 16px;
     padding: 2.5rem;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   }
 
-  .rfr-header { margin-bottom: 2rem; }
-  .rfr-title {
+  .rv-form-header { margin-bottom: 2rem; }
+  .rv-form-title {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
@@ -220,120 +228,116 @@
     margin-top: .5rem;
   }
 
-  .review-form { display: flex; flex-direction: column; gap: 1.25rem; }
+  .rv-form { display: flex; flex-direction: column; gap: 1.25rem; }
+  .rv-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-  .rf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-  .rf-group { display: flex; flex-direction: column; gap: .375rem; }
-  .rf-group label {
+  .rv-field { display: flex; flex-direction: column; gap: .375rem; }
+  .rv-field label {
     font-size: .78rem;
     font-weight: 700;
-    color: rgba(240,237,232,.6);
+    color: rgba(240, 237, 232, 0.6);
     letter-spacing: .08em;
     text-transform: uppercase;
   }
-  .req { color: var(--orange); }
+  .rv-req { color: #FF6B35; }
 
-  .rf-group input[type="text"],
-  .rf-group textarea {
+  .rv-field input[type="text"],
+  .rv-field textarea {
     font-family: var(--font-body);
     font-size: .95rem;
     padding: .75rem 1rem;
-    background: rgba(255,255,255,.05);
-    border: 1.5px solid rgba(255,255,255,.1);
-    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
     color: var(--dark);
     width: 100%;
     transition: border-color .2s, box-shadow .2s;
     resize: vertical;
   }
-  .rf-group input[type="text"]::placeholder,
-  .rf-group textarea::placeholder { color: rgba(240,237,232,.25); }
-  .rf-group input[type="text"]:focus,
-  .rf-group textarea:focus {
+  .rv-field input[type="text"]::placeholder,
+  .rv-field textarea::placeholder { color: rgba(240, 237, 232, 0.25); }
+  .rv-field input[type="text"]:focus,
+  .rv-field textarea:focus {
     outline: none;
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px rgba(255,107,53,.15);
+    border-color: #FF6B35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
   }
 
-  /* Sélecteur d'étoiles */
-  .star-picker { display: flex; gap: .3rem; margin-top: .2rem; }
-  .star-btn {
+  .rv-star-picker { display: flex; gap: .3rem; margin-top: .2rem; }
+  .rv-star-btn {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 2rem;
-    color: rgba(255,107,53,.2);
+    color: rgba(255, 107, 53, 0.2);
     padding: 0 .05rem;
     line-height: 1;
     transition: color .15s, transform .15s;
   }
-  .star-btn:hover,
-  .star-btn.active { color: var(--orange); transform: scale(1.2); }
+  .rv-star-btn:hover,
+  .rv-star-btn.active { color: #FF6B35; transform: scale(1.2); }
 
-  .rf-footer {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    margin-top: .25rem;
-  }
+  .rv-form-footer { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; margin-top: .25rem; }
 
-  .rf-feedback { font-size: .9rem; font-weight: 500; flex: 1; min-width: 0; }
-  .rf-feedback.ok  { color: #4ade80; }
-  .rf-feedback.err { color: #f87171; }
+  .rv-feedback { font-size: .9rem; font-weight: 500; flex: 1; }
+  .rv-feedback.ok  { color: #4ade80; }
+  .rv-feedback.err { color: #f87171; }
 
   /* ── Responsive ───────────────────────────────────────────── */
   @media (max-width: 600px) {
-    .rf-row { grid-template-columns: 1fr; }
-    .review-form-wrap { padding: 1.5rem 1.25rem; }
-    .testi-card { width: min(300px, 80vw); }
+    .rv-form-row { grid-template-columns: 1fr; }
+    .rv-form-wrap { padding: 1.5rem 1.25rem; }
+    .rv-card { width: min(300px, 82vw); }
     .carousel-outer { margin: 0 -12px; margin-bottom: 3rem; }
   }
+
 </style>
 
 <script>
 (function () {
   'use strict';
 
-  const AVATAR_COLORS = ['#FF6B35', '#1A3A5C', '#F4A261', '#2E7D6B', '#7B3FAB'];
-  const SPEED = 0.45; // px per animation frame
+  const COLORS = ['#FF6B35', '#1A3A5C', '#F4A261', '#2E7D6B', '#7B3FAB'];
 
-  /* Escape HTML */
   function esc(s) {
     const d = document.createElement('div');
     d.textContent = String(s ?? '');
     return d.innerHTML;
   }
 
-  /* Build one card HTML */
-  function cardHTML(review, idx) {
-    const color    = AVATAR_COLORS[idx % AVATAR_COLORS.length];
-    const initials = (review.firstName[0] + review.lastName[0]).toUpperCase();
-    const display  = `${esc(review.firstName)} ${esc(review.lastName[0])}.`;
-    const filled   = '★'.repeat(review.rating);
-    const empty    = review.rating < 5 ? `<span class="dim">${'★'.repeat(5 - review.rating)}</span>` : '';
+  /* ── Construit une carte ──────────────────────────────────── */
+  function buildCard(review, idx) {
+    const color    = COLORS[idx % COLORS.length];
+    const initials = ((review.firstName[0] ?? '') + (review.lastName[0] ?? '')).toUpperCase();
+    const name     = `${esc(review.firstName)} ${esc(review.lastName[0])}.`;
+    const filled   = '★'.repeat(Math.max(0, review.rating));
+    const empty    = review.rating < 5
+      ? `<span class="rv-star-dim">${'★'.repeat(5 - review.rating)}</span>`
+      : '';
 
-    return `
-      <article class="testi-card">
-        <div class="tc-body">
-          <div class="tc-stars" aria-label="${review.rating} étoile${review.rating > 1 ? 's' : ''} sur 5">
-            ${filled}${empty}
-          </div>
-          <blockquote class="tc-comment">${esc(review.comment)}</blockquote>
+    const card = document.createElement('article');
+    card.className = 'rv-card';
+    card.innerHTML = `
+      <div class="rv-card-body">
+        <div class="rv-card-stars" aria-label="${review.rating} étoile${review.rating > 1 ? 's' : ''} sur 5">
+          ${filled}${empty}
         </div>
-        <div class="tc-footer">
-          <div class="tc-avatar" style="background:${color}">${initials}</div>
-          <span class="tc-name">${display}</span>
-        </div>
-      </article>`;
+        <blockquote class="rv-card-comment">${esc(review.comment)}</blockquote>
+      </div>
+      <div class="rv-card-sep"></div>
+      <div class="rv-card-footer">
+        <div class="rv-card-avatar" style="background:${color}">${initials}</div>
+        <span class="rv-card-name">${name}</span>
+      </div>`;
+    return card;
   }
 
-  /* ── Carousel ─────────────────────────────────────────────── */
+  /* ── Carrousel ────────────────────────────────────────────── */
   async function initCarousel() {
     const track  = document.getElementById('carouselTrack');
     const outer  = document.getElementById('carouselOuter');
     const noRevs = document.getElementById('noReviews');
+    if (!track || !outer) return;
 
     let approved = [];
     try {
@@ -346,55 +350,35 @@
 
     if (approved.length === 0) {
       outer.style.display = 'none';
-      noRevs.style.display = '';
+      if (noRevs) noRevs.style.display = '';
       return;
     }
 
-    // Double the cards for seamless infinite loop
-    const html = approved.map((r, i) => cardHTML(r, i)).join('');
-    track.innerHTML = html + html;
-
-    // Measure after paint then animate
-    requestAnimationFrame(() => {
-      const halfW  = track.scrollWidth / 2;
-      let pos      = 0;
-      let paused   = false;
-
-      outer.addEventListener('mouseenter', () => paused = true);
-      outer.addEventListener('mouseleave', () => paused = false);
-      outer.addEventListener('focusin',   () => paused = true);
-      outer.addEventListener('focusout',  () => paused = false);
-
-      (function step() {
-        if (!paused) {
-          pos += SPEED;
-          if (pos >= halfW) pos -= halfW;
-          track.style.transform = `translateX(-${pos}px)`;
-        }
-        requestAnimationFrame(step);
-      })();
+    // Injecte les cartes + leur clone pour la boucle CSS (-50%)
+    const fragment = document.createDocumentFragment();
+    const clone    = document.createDocumentFragment();
+    approved.forEach((r, i) => {
+      fragment.appendChild(buildCard(r, i));
+      clone.appendChild(buildCard(r, i));
     });
+    track.appendChild(fragment);
+    track.appendChild(clone);
   }
 
   /* ── Sélecteur d'étoiles ──────────────────────────────────── */
-  function initStarPicker() {
+  function initStars() {
     const picker = document.getElementById('starPicker');
     const input  = document.getElementById('rf-rating');
     if (!picker) return;
 
-    const btns = [...picker.querySelectorAll('.star-btn')];
+    const btns = [...picker.querySelectorAll('.rv-star-btn')];
     let current = 0;
+    const hl = n => btns.forEach((b, i) => b.classList.toggle('active', i < n));
 
-    const highlight = n => btns.forEach((b, i) => b.classList.toggle('active', i < n));
-
-    btns.forEach((btn, idx) => {
-      btn.addEventListener('mouseenter', () => highlight(idx + 1));
-      btn.addEventListener('mouseleave', () => highlight(current));
-      btn.addEventListener('click', () => {
-        current = idx + 1;
-        input.value = current;
-        highlight(current);
-      });
+    btns.forEach((btn, i) => {
+      btn.addEventListener('mouseenter', () => hl(i + 1));
+      btn.addEventListener('mouseleave', () => hl(current));
+      btn.addEventListener('click', () => { current = i + 1; input.value = current; hl(current); });
     });
   }
 
@@ -405,41 +389,37 @@
     const submitBtn = document.getElementById('rfSubmitBtn');
     if (!form) return;
 
-    function showFeedback(msg, ok) {
-      feedback.textContent  = msg;
-      feedback.className    = 'rf-feedback ' + (ok ? 'ok' : 'err');
+    const show = (msg, ok) => {
+      feedback.textContent   = msg;
+      feedback.className     = 'rv-feedback ' + (ok ? 'ok' : 'err');
       feedback.style.display = '';
-    }
+    };
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
-
-      const rating = parseInt(document.getElementById('rf-rating').value || '0');
-      if (rating < 1) {
-        showFeedback('Veuillez sélectionner une note.', false);
+      if (parseInt(document.getElementById('rf-rating').value || '0') < 1) {
+        show('Veuillez sélectionner une note.', false);
         return;
       }
-
-      submitBtn.disabled    = true;
+      submitBtn.disabled = true;
       submitBtn.textContent = 'Envoi…';
 
-      const phpBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? 'http://localhost:8080'
-        : '';
+      const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        ? 'http://localhost:8080' : '';
 
       try {
-        const res  = await fetch(`${phpBase}/submit-review.php`, { method: 'POST', body: new FormData(form) });
+        const res  = await fetch(`${base}/submit-review.php`, { method: 'POST', body: new FormData(form) });
         const json = await res.json();
         if (json.ok) {
-          showFeedback('Merci ! Votre avis a été soumis et sera publié après validation.', true);
+          show('Merci ! Votre avis sera publié après validation.', true);
           form.reset();
           document.getElementById('rf-rating').value = '0';
-          document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.rv-star-btn').forEach(b => b.classList.remove('active'));
         } else {
-          showFeedback(json.error || 'Une erreur est survenue. Réessayez.', false);
+          show(json.error || 'Une erreur est survenue.', false);
         }
       } catch (_) {
-        showFeedback('Impossible de soumettre. Vérifiez votre connexion.', false);
+        show('Impossible de soumettre. Vérifiez votre connexion.', false);
       } finally {
         submitBtn.disabled    = false;
         submitBtn.textContent = 'Soumettre mon avis';
@@ -447,9 +427,8 @@
     });
   }
 
-  /* ── Init ─────────────────────────────────────────────────── */
   initCarousel();
-  initStarPicker();
+  initStars();
   initForm();
 })();
 </script>
