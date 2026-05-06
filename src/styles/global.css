@@ -48,6 +48,28 @@ body {
 img { display: block; max-width: 100%; }
 a  { color: inherit; text-decoration: none; }
 
+/* --- Skip link -------------------------------------------- */
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  transform: translateY(-200%);
+  z-index: 9999;
+  background: var(--cream);
+  color: var(--dark);
+  border: 2px solid var(--orange);
+  padding: .75rem 1.5rem;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-body);
+  font-size: .875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .2s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 /* --- Overline ---------------------------------------------- */
 .overline {
   font-family: var(--font-body);

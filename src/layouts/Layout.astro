@@ -63,6 +63,7 @@ const canonicalUrl = canonical ?? (siteUrl + Astro.url.pathname.replace(/\/$/, '
   </head>
 
   <body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
     <slot />
 
     <!-- Intersection Observer : fade-up + staggered grids -->
