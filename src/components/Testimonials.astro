@@ -1,30 +1,8 @@
 ---
-const testimonials = [
-  {
-    quote:    "Une soirée absolument magique sur le pont du bateau. Le coucher de soleil, la musique... inoubliable.",
-    name:     "Sophie M.",
-    city:     "Cannes",
-    initials: "SM",
-    color:    "#FF6B35",
-  },
-  {
-    quote:    "L'organisation était parfaite, l'ambiance incroyable. On reviendra sans hésiter !",
-    name:     "Thomas L.",
-    city:     "Paris",
-    initials: "TL",
-    color:    "#1A3A5C",
-  },
-  {
-    quote:    "JetSetBoat c'est vraiment autre chose. Luxe, bonne humeur et professionnalisme.",
-    name:     "Camille R.",
-    city:     "Monaco",
-    initials: "CR",
-    color:    "#F4A261",
-  },
-];
+// All review data loaded client-side from /reviews.json
 ---
 
-<section class="testimonials">
+<section class="testimonials" id="avis">
   <div class="container">
 
     <div class="testi-header fade-up">
@@ -32,53 +10,71 @@ const testimonials = [
       <h2 class="testi-title">Ce qu'ils en disent</h2>
     </div>
 
-    <div class="testi-grid">
-      {testimonials.map((t) => (
-        <article class="testi-card fade-up">
+    <!-- Carousel -->
+    <div class="carousel-outer fade-up" id="carouselOuter">
+      <div class="carousel-track" id="carouselTrack"></div>
+    </div>
+    <p class="no-reviews" id="noReviews" style="display:none">
+      Soyez le premier à partager votre expérience !
+    </p>
 
-          <!-- Decorative quote mark -->
-          <div class="testi-deco" aria-hidden="true">&ldquo;</div>
+    <!-- Formulaire inline -->
+    <div class="review-form-wrap fade-up">
+      <div class="rfr-header">
+        <p class="overline">Votre expérience</p>
+        <h3 class="rfr-title">Partagez votre avis</h3>
+      </div>
 
-          <!-- Stars -->
-          <div class="stars" aria-label="5 étoiles sur 5">
-            {[1,2,3,4,5].map(() => (
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            ))}
+      <form id="reviewForm" class="review-form" novalidate>
+        <div class="rf-row">
+          <div class="rf-group">
+            <label for="rf-prenom">Prénom <span class="req">*</span></label>
+            <input type="text" id="rf-prenom" name="prenom" required placeholder="Sophie" autocomplete="given-name">
           </div>
-
-          <!-- Quote -->
-          <blockquote class="testi-quote">
-            {t.quote}
-          </blockquote>
-
-          <!-- Author -->
-          <div class="testi-author">
-            <div class="testi-avatar" style={`background: ${t.color}`}>
-              {t.initials}
-            </div>
-            <div>
-              <p class="testi-name">{t.name}</p>
-              <p class="testi-city">{t.city}</p>
-            </div>
+          <div class="rf-group">
+            <label for="rf-nom">Nom <span class="req">*</span></label>
+            <input type="text" id="rf-nom" name="nom" required placeholder="Martin" autocomplete="family-name">
           </div>
+        </div>
 
-        </article>
-      ))}
+        <div class="rf-group">
+          <label>Note <span class="req">*</span></label>
+          <div class="star-picker" id="starPicker" role="group" aria-label="Votre note">
+            <button type="button" class="star-btn" data-value="1" aria-label="1 étoile">★</button>
+            <button type="button" class="star-btn" data-value="2" aria-label="2 étoiles">★</button>
+            <button type="button" class="star-btn" data-value="3" aria-label="3 étoiles">★</button>
+            <button type="button" class="star-btn" data-value="4" aria-label="4 étoiles">★</button>
+            <button type="button" class="star-btn" data-value="5" aria-label="5 étoiles">★</button>
+          </div>
+          <input type="hidden" id="rf-rating" name="rating" value="0">
+        </div>
+
+        <div class="rf-group">
+          <label for="rf-comment">Commentaire <span class="req">*</span></label>
+          <textarea id="rf-comment" name="comment" required rows="4" placeholder="Décrivez votre expérience à bord..."></textarea>
+        </div>
+
+        <!-- Honeypot -->
+        <input type="text" name="website" style="display:none" tabindex="-1" aria-hidden="true">
+
+        <div class="rf-footer">
+          <button type="submit" class="btn btn-primary" id="rfSubmitBtn">Soumettre mon avis</button>
+          <p id="rf-feedback" class="rf-feedback" aria-live="polite" style="display:none"></p>
+        </div>
+      </form>
     </div>
 
   </div>
 </section>
 
 <style>
+  /* ── Section ──────────────────────────────────────────────── */
   .testimonials {
     background: #0D1117;
     padding: var(--section-py) 0;
     position: relative;
     overflow: hidden;
   }
-
   .testimonials::before {
     content: '';
     position: absolute;
@@ -88,17 +84,10 @@ const testimonials = [
       url('/images/bg-testimonials.jpg') center / cover no-repeat;
     z-index: 0;
   }
+  .testimonials .container { position: relative; z-index: 1; }
 
-  .testimonials .container {
-    position: relative;
-    z-index: 1;
-  }
-
-  .testi-header {
-    text-align: center;
-    margin-bottom: 3.5rem;
-  }
-
+  /* ── Header ───────────────────────────────────────────────── */
+  .testi-header { text-align: center; margin-bottom: 3.5rem; }
   .testi-title {
     font-family: var(--font-heading);
     font-size: clamp(2rem, 4vw, 3rem);
@@ -109,15 +98,28 @@ const testimonials = [
     line-height: 1.1;
   }
 
-  /* Grid */
-  .testi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+  /* ── Carousel wrapper ─────────────────────────────────────── */
+  .carousel-outer {
+    overflow: hidden;
+    position: relative;
+    margin: 0 -24px;          /* bleed past container padding */
+    margin-bottom: 4rem;
+    /* Fade edges */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image:         linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
   }
 
-  /* Card */
+  .carousel-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  /* ── Card (reprend exactement le style existant) ─────────── */
   .testi-card {
+    width: 360px;
+    margin-right: 1.5rem;   /* gap-as-margin for clean -50% math */
+    flex-shrink: 0;
     background: #1A2332;
     border: 1px solid rgba(255,255,255,0.08);
     border-top: 2px solid rgba(255,107,53,.18);
@@ -127,16 +129,12 @@ const testimonials = [
     flex-direction: column;
     gap: 1rem;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    transition: transform .35s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow .3s ease, border-color .3s ease;
+    transition: border-color .3s ease;
     position: relative;
-  }
-  .testi-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 56px rgba(0,0,0,.5), 0 4px 16px rgba(255,107,53,.12);
-    border-top-color: rgba(255,107,53,.45);
+    cursor: default;
   }
 
-  /* Decorative large quote mark */
+  /* Guillemet déco */
   .testi-deco {
     position: absolute;
     top: 1.25rem;
@@ -149,14 +147,14 @@ const testimonials = [
     user-select: none;
   }
 
-  /* Stars */
+  /* Étoiles */
   .stars {
     display: flex;
     gap: .2rem;
     color: var(--orange);
   }
 
-  /* Quote */
+  /* Citation */
   .testi-quote {
     font-family: var(--font-heading);
     font-style: italic;
@@ -168,14 +166,13 @@ const testimonials = [
     border-bottom: 1px solid rgba(255,255,255,.07);
   }
 
-  /* Author */
+  /* Auteur */
   .testi-author {
     display: flex;
     align-items: center;
     gap: .875rem;
     padding-top: .25rem;
   }
-
   .testi-avatar {
     width: 44px;
     height: 44px;
@@ -186,19 +183,17 @@ const testimonials = [
     font-family: var(--font-heading);
     font-size: .875rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #fff;
     flex-shrink: 0;
     letter-spacing: .02em;
     box-shadow: 0 2px 8px rgba(0,0,0,.35);
   }
-
   .testi-name {
     font-size: .9rem;
     font-weight: 600;
     color: var(--dark);
     line-height: 1.3;
   }
-
   .testi-city {
     font-size: .75rem;
     font-weight: 600;
@@ -211,11 +206,281 @@ const testimonials = [
     margin-top: .15rem;
   }
 
-  /* Responsive */
-  @media (max-width: 900px) {
-    .testi-grid { grid-template-columns: 1fr 1fr; }
+  /* Aucun avis */
+  .no-reviews {
+    text-align: center;
+    color: rgba(240,237,232,.45);
+    font-style: italic;
+    margin-bottom: 3rem;
   }
-  @media (max-width: 560px) {
-    .testi-grid { grid-template-columns: 1fr; }
+
+  /* ── Formulaire ───────────────────────────────────────────── */
+  .review-form-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #1A2332;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-top: 2px solid rgba(255,107,53,.25);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .rfr-header { margin-bottom: 2rem; }
+  .rfr-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: .5rem;
+  }
+
+  .review-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .rf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .rf-group { display: flex; flex-direction: column; gap: .375rem; }
+  .rf-group label {
+    font-size: .78rem;
+    font-weight: 700;
+    color: rgba(240,237,232,.6);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .req { color: var(--orange); }
+
+  .rf-group input[type="text"],
+  .rf-group textarea {
+    font-family: var(--font-body);
+    font-size: .95rem;
+    padding: .75rem 1rem;
+    background: rgba(255,255,255,.05);
+    border: 1.5px solid rgba(255,255,255,.1);
+    border-radius: var(--radius-sm);
+    color: var(--dark);
+    width: 100%;
+    transition: border-color .2s, box-shadow .2s;
+    resize: vertical;
+  }
+  .rf-group input[type="text"]::placeholder,
+  .rf-group textarea::placeholder { color: rgba(240,237,232,.25); }
+  .rf-group input[type="text"]:focus,
+  .rf-group textarea:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255,107,53,.15);
+  }
+
+  /* Sélecteur d'étoiles */
+  .star-picker { display: flex; gap: .3rem; margin-top: .2rem; }
+  .star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    color: rgba(255,107,53,.2);
+    padding: 0 .05rem;
+    line-height: 1;
+    transition: color .15s, transform .15s;
+  }
+  .star-btn:hover,
+  .star-btn.active { color: var(--orange); transform: scale(1.2); }
+
+  .rf-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: .25rem;
+  }
+
+  .rf-feedback { font-size: .9rem; font-weight: 500; flex: 1; min-width: 0; }
+  .rf-feedback.ok  { color: #4ade80; }
+  .rf-feedback.err { color: #f87171; }
+
+  /* ── Responsive ───────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .rf-row { grid-template-columns: 1fr; }
+    .review-form-wrap { padding: 1.5rem 1.25rem; }
+    .testi-card { width: min(320px, 80vw); }
+    .carousel-outer { margin: 0 -12px; margin-bottom: 3rem; }
   }
 </style>
+
+<script>
+(function () {
+  'use strict';
+
+  const AVATAR_COLORS = ['#FF6B35', '#1A3A5C', '#F4A261', '#2E7D6B', '#7B3FAB'];
+  const SPEED = 0.45; // px per animation frame
+
+  /* Escape HTML */
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = String(s ?? '');
+    return d.innerHTML;
+  }
+
+  /* Build star SVGs */
+  function starsSVG(rating) {
+    return Array.from({ length: 5 }, (_, i) => {
+      const filled = i < rating;
+      return `<svg width="14" height="14" viewBox="0 0 24 24"
+                   fill="${filled ? 'currentColor' : 'none'}"
+                   stroke="${filled ? 'currentColor' : 'rgba(255,107,53,.3)'}"
+                   stroke-width="2" aria-hidden="true">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>`;
+    }).join('');
+  }
+
+  /* Build one card HTML */
+  function cardHTML(review, idx) {
+    const color    = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+    const initials = (review.firstName[0] + review.lastName[0]).toUpperCase();
+    const display  = `${esc(review.firstName)} ${esc(review.lastName[0])}.`;
+    const city     = review.city
+      ? `<p class="testi-city">${esc(review.city)}</p>`
+      : '';
+
+    return `
+      <article class="testi-card">
+        <div class="testi-deco" aria-hidden="true">&ldquo;</div>
+        <div class="stars" aria-label="${review.rating} étoile${review.rating > 1 ? 's' : ''} sur 5">
+          ${starsSVG(review.rating)}
+        </div>
+        <blockquote class="testi-quote">${esc(review.comment)}</blockquote>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:${color}">${initials}</div>
+          <div>
+            <p class="testi-name">${display}</p>
+            ${city}
+          </div>
+        </div>
+      </article>`;
+  }
+
+  /* ── Carousel ─────────────────────────────────────────────── */
+  async function initCarousel() {
+    const track  = document.getElementById('carouselTrack');
+    const outer  = document.getElementById('carouselOuter');
+    const noRevs = document.getElementById('noReviews');
+
+    let approved = [];
+    try {
+      const res = await fetch('/reviews.json');
+      if (res.ok) {
+        const all = await res.json();
+        approved = all.filter(r => r.status === 'approved');
+      }
+    } catch (_) {}
+
+    if (approved.length === 0) {
+      outer.style.display = 'none';
+      noRevs.style.display = '';
+      return;
+    }
+
+    // Double the cards for seamless infinite loop
+    const html = approved.map((r, i) => cardHTML(r, i)).join('');
+    track.innerHTML = html + html;
+
+    // Measure after paint then animate
+    requestAnimationFrame(() => {
+      const halfW  = track.scrollWidth / 2;
+      let pos      = 0;
+      let paused   = false;
+
+      outer.addEventListener('mouseenter', () => paused = true);
+      outer.addEventListener('mouseleave', () => paused = false);
+      outer.addEventListener('focusin',   () => paused = true);
+      outer.addEventListener('focusout',  () => paused = false);
+
+      (function step() {
+        if (!paused) {
+          pos += SPEED;
+          if (pos >= halfW) pos -= halfW;
+          track.style.transform = `translateX(-${pos}px)`;
+        }
+        requestAnimationFrame(step);
+      })();
+    });
+  }
+
+  /* ── Sélecteur d'étoiles ──────────────────────────────────── */
+  function initStarPicker() {
+    const picker = document.getElementById('starPicker');
+    const input  = document.getElementById('rf-rating');
+    if (!picker) return;
+
+    const btns = [...picker.querySelectorAll('.star-btn')];
+    let current = 0;
+
+    const highlight = n => btns.forEach((b, i) => b.classList.toggle('active', i < n));
+
+    btns.forEach((btn, idx) => {
+      btn.addEventListener('mouseenter', () => highlight(idx + 1));
+      btn.addEventListener('mouseleave', () => highlight(current));
+      btn.addEventListener('click', () => {
+        current = idx + 1;
+        input.value = current;
+        highlight(current);
+      });
+    });
+  }
+
+  /* ── Formulaire ───────────────────────────────────────────── */
+  function initForm() {
+    const form      = document.getElementById('reviewForm');
+    const feedback  = document.getElementById('rf-feedback');
+    const submitBtn = document.getElementById('rfSubmitBtn');
+    if (!form) return;
+
+    function showFeedback(msg, ok) {
+      feedback.textContent  = msg;
+      feedback.className    = 'rf-feedback ' + (ok ? 'ok' : 'err');
+      feedback.style.display = '';
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const rating = parseInt(document.getElementById('rf-rating').value || '0');
+      if (rating < 1) {
+        showFeedback('Veuillez sélectionner une note.', false);
+        return;
+      }
+
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Envoi…';
+
+      const phpBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:8080'
+        : '';
+
+      try {
+        const res  = await fetch(`${phpBase}/submit-review.php`, { method: 'POST', body: new FormData(form) });
+        const json = await res.json();
+        if (json.ok) {
+          showFeedback('Merci ! Votre avis a été soumis et sera publié après validation.', true);
+          form.reset();
+          document.getElementById('rf-rating').value = '0';
+          document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+        } else {
+          showFeedback(json.error || 'Une erreur est survenue. Réessayez.', false);
+        }
+      } catch (_) {
+        showFeedback('Impossible de soumettre. Vérifiez votre connexion.', false);
+      } finally {
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Soumettre mon avis';
+      }
+    });
+  }
+
+  /* ── Init ─────────────────────────────────────────────────── */
+  initCarousel();
+  initStarPicker();
+  initForm();
+})();
+</script>

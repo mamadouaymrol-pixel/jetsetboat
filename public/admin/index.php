@@ -15,9 +15,10 @@ define('ADMIN_BASE', $_adminDir . '/');                       // /admin/  or /je
 define('SITE_BASE',  ($_siteDir === '' || $_siteDir === '.') ? '/' : $_siteDir . '/');
 // ──────────────────────────────────────────────────────────────────────────────
 
-$eventsFile = __DIR__ . '/../events.json';
-$uploadDir  = __DIR__ . '/../images/events/';
-$uploadBase = SITE_BASE . 'images/events/';   // /images/events/ or /jetsetboat/images/events/
+$eventsFile  = __DIR__ . '/../events.json';
+$reviewsFile = __DIR__ . '/../reviews.json';
+$uploadDir   = __DIR__ . '/../images/events/';
+$uploadBase  = SITE_BASE . 'images/events/';   // /images/events/ or /jetsetboat/images/events/
 
 /* ── Helpers ── */
 
@@ -33,6 +34,21 @@ function writeEvents(array $events): void {
     file_put_contents(
         $eventsFile,
         json_encode(array_values($events), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+    );
+}
+
+function readReviews(): array {
+    global $reviewsFile;
+    if (!file_exists($reviewsFile)) return [];
+    $data = json_decode(file_get_contents($reviewsFile), true);
+    return is_array($data) ? $data : [];
+}
+
+function writeReviews(array $reviews): void {
+    global $reviewsFile;
+    file_put_contents(
+        $reviewsFile,
+        json_encode(array_values($reviews), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
     );
 }
 
@@ -200,6 +216,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect(ADMIN_BASE);
     }
 
+    /* Approve review */
+    if ($action === 'approve_review') {
+        requireLogin();
+        $id = trim($_POST['id'] ?? '');
+        if ($id) {
+            $reviews = readReviews();
+            foreach ($reviews as &$rev) {
+                if ($rev['id'] === $id) { $rev['status'] = 'approved'; break; }
+            }
+            unset($rev);
+            writeReviews($reviews);
+            setFlash('success', 'Avis approuvé et publié sur le site.');
+        }
+        redirect(ADMIN_BASE . '?page=reviews');
+    }
+
+    /* Delete review */
+    if ($action === 'delete_review') {
+        requireLogin();
+        $id = trim($_POST['id'] ?? '');
+        if ($id) {
+            $reviews = readReviews();
+            $reviews = array_values(array_filter($reviews, fn($r) => $r['id'] !== $id));
+            writeReviews($reviews);
+            setFlash('success', 'Avis supprimé.');
+        }
+        redirect(ADMIN_BASE . '?page=reviews');
+    }
+
+    /* Save review (edit) */
+    if ($action === 'save_review') {
+        requireLogin();
+        $id      = trim($_POST['id']        ?? '');
+        $first   = trim($_POST['firstName'] ?? '');
+        $last    = trim($_POST['lastName']  ?? '');
+        $rating  = max(1, min(5, (int)($_POST['rating']  ?? 5)));
+        $comment = trim($_POST['comment']   ?? '');
+        $city    = trim($_POST['city']      ?? '');
+
+        if (!$first || !$last || !$comment) {
+            setFlash('error', 'Tous les champs obligatoires doivent être remplis.');
+            redirect(ADMIN_BASE . '?page=edit_review&id=' . urlencode($id));
+        }
+
+        $reviews = readReviews();
+        foreach ($reviews as &$rev) {
+            if ($rev['id'] === $id) {
+                $rev['firstName'] = $first;
+                $rev['lastName']  = $last;
+                $rev['rating']    = $rating;
+                $rev['comment']   = $comment;
+                if ($city !== '') $rev['city'] = $city; else unset($rev['city']);
+                break;
+            }
+        }
+        unset($rev);
+        writeReviews($reviews);
+        setFlash('success', 'Avis modifié avec succès.');
+        redirect(ADMIN_BASE . '?page=reviews');
+    }
+
     /* Change password */
     if ($action === 'change_password') {
         requireLogin();
@@ -262,7 +339,19 @@ if ($page === 'edit' && $editId) {
 }
 
 usort($events, fn($a, $b) => strcmp($a['date'], $b['date']));
-renderAdmin($page, $events, $editEvent, $flash);
+
+$editReview = null;
+if ($page === 'edit_review' && $editId) {
+    foreach (readReviews() as $r) {
+        if ($r['id'] === $editId) { $editReview = $r; break; }
+    }
+    if (!$editReview) {
+        setFlash('error', 'Avis introuvable.');
+        redirect(ADMIN_BASE . '?page=reviews');
+    }
+}
+
+renderAdmin($page, $events, $editEvent, $flash, $editReview);
 
 /* ══════════════════════════════════════════════════════════════════════════
    RENDER FUNCTIONS
@@ -343,6 +432,17 @@ input[type=file]:hover{border-color:#FF6B35}
 .empty{text-align:center;padding:4rem 2rem;color:#6b7280}
 .empty-ico{font-size:3rem;margin-bottom:1rem}
 
+/* Reviews */
+.rv-section{margin-bottom:.5rem}
+.rv-section-title{font-size:1rem;font-weight:700;margin-bottom:.875rem;padding-left:.75rem}
+.pending-title{color:#ea580c;border-left:3px solid #ea580c}
+.approved-title{color:#16a34a;border-left:3px solid #16a34a}
+.rv-empty{color:#9ca3af;font-size:.875rem;padding:.5rem 0}
+.rv-avatar{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.02em}
+.rv-comment{font-size:.8rem;color:#6b7280;margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:480px}
+.rv-stars{color:#ea580c;font-size:.9rem;letter-spacing:.05em}
+.btn-green{background:#dcfce7;color:#15803d}.btn-green:hover{background:#bbf7d0}
+
 /* Delete modal */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
 .modal.on{display:flex}
@@ -397,7 +497,7 @@ function renderLogin(?array $flash): void { ?>
 </html>
 <?php }
 
-function renderAdmin(string $page, array $events, ?array $editEvent, ?array $flash): void { ?>
+function renderAdmin(string $page, array $events, ?array $editEvent, ?array $flash, ?array $editReview = null): void { ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -412,6 +512,7 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
   <div class="ah-logo">JetSet<span>Boat</span> <span style="font-weight:400;opacity:.6;font-size:.9rem">Admin</span></div>
   <nav class="ah-nav">
     <a href="?" class="btn btn-ghost">Événements</a>
+    <a href="?page=reviews" class="btn btn-ghost">Avis</a>
     <a href="?page=new" class="btn btn-orange">+ Nouvel événement</a>
     <a href="<?= h(SITE_BASE) ?>" class="btn btn-ghost" target="_blank">Voir le site ↗</a>
     <a href="?page=password" class="btn btn-ghost">Mot de passe</a>
@@ -645,9 +746,168 @@ function renderAdmin(string $page, array $events, ?array $editEvent, ?array $fla
       </form>
     </div>
 
+  <?php elseif ($page === 'reviews'): ?>
+    <!-- ─── Reviews list ─── -->
+    <?php
+      $allReviews = readReviews();
+      $pending  = array_values(array_filter($allReviews, fn($r) => ($r['status'] ?? '') === 'pending'));
+      $approved = array_values(array_filter($allReviews, fn($r) => ($r['status'] ?? '') === 'approved'));
+      $avatarColors = ['#FF6B35','#1A3A5C','#F4A261','#2E7D6B','#7B3FAB'];
+      function reviewAvatar(array $r, int $idx, array $colors): string {
+          $col = $colors[$idx % count($colors)];
+          $ini = strtoupper(($r['firstName'][0] ?? '?') . ($r['lastName'][0] ?? '?'));
+          return "<span class='rv-avatar' style='background:{$col}'>{$ini}</span>";
+      }
+      function reviewStars(int $n): string {
+          return '<span class="rv-stars">' . str_repeat('★',$n) . '<span style="opacity:.3">' . str_repeat('★',5-$n) . '</span></span>';
+      }
+    ?>
+    <div class="ph">
+      <h1>Avis clients (<?= count($allReviews) ?>)</h1>
+    </div>
+
+    <!-- En attente -->
+    <div class="rv-section">
+      <h2 class="rv-section-title pending-title">En attente de validation (<?= count($pending) ?>)</h2>
+      <?php if (empty($pending)): ?>
+        <p class="rv-empty">Aucun avis en attente.</p>
+      <?php else: ?>
+        <div class="ev-list">
+          <?php foreach ($pending as $i => $r): ?>
+            <div class="ev-row">
+              <?= reviewAvatar($r, $i, $avatarColors) ?>
+              <div class="ev-info">
+                <div class="ev-title"><?= h($r['firstName']) ?> <?= h($r['lastName']) ?></div>
+                <div class="ev-meta">
+                  <?= reviewStars((int)($r['rating'] ?? 5)) ?>
+                  <span style="color:#9ca3af"><?= h($r['date'] ?? '') ?></span>
+                </div>
+                <div class="rv-comment"><?= h($r['comment']) ?></div>
+              </div>
+              <div class="ev-actions">
+                <form method="POST" action="" style="display:inline">
+                  <input type="hidden" name="action" value="approve_review">
+                  <input type="hidden" name="id" value="<?= h($r['id']) ?>">
+                  <button type="submit" class="btn btn-green btn-sm">✓ Approuver</button>
+                </form>
+                <button type="button" class="btn btn-red btn-sm"
+                        data-id="<?= h($r['id']) ?>"
+                        data-name="<?= h($r['firstName'] . ' ' . $r['lastName']) ?>"
+                        onclick="openDelRev(this)">Supprimer</button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <!-- Publiés -->
+    <div class="rv-section" style="margin-top:2rem">
+      <h2 class="rv-section-title approved-title">Avis publiés (<?= count($approved) ?>)</h2>
+      <?php if (empty($approved)): ?>
+        <p class="rv-empty">Aucun avis publié.</p>
+      <?php else: ?>
+        <div class="ev-list">
+          <?php foreach ($approved as $i => $r): ?>
+            <div class="ev-row">
+              <?= reviewAvatar($r, $i, $avatarColors) ?>
+              <div class="ev-info">
+                <div class="ev-title">
+                  <?= h($r['firstName']) ?> <?= h($r['lastName']) ?>
+                  <?php if (!empty($r['city'])): ?>
+                    <span style="font-weight:400;opacity:.6;font-size:.8rem">— <?= h($r['city']) ?></span>
+                  <?php endif; ?>
+                </div>
+                <div class="ev-meta">
+                  <?= reviewStars((int)($r['rating'] ?? 5)) ?>
+                  <span style="color:#9ca3af"><?= h($r['date'] ?? '') ?></span>
+                </div>
+                <div class="rv-comment"><?= h($r['comment']) ?></div>
+              </div>
+              <div class="ev-actions">
+                <a href="?page=edit_review&id=<?= urlencode($r['id']) ?>" class="btn btn-dark btn-sm">Modifier</a>
+                <button type="button" class="btn btn-red btn-sm"
+                        data-id="<?= h($r['id']) ?>"
+                        data-name="<?= h($r['firstName'] . ' ' . $r['lastName']) ?>"
+                        onclick="openDelRev(this)">Supprimer</button>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+
+  <?php elseif ($page === 'edit_review' && $editReview): ?>
+    <!-- ─── Edit review ─── -->
+    <div class="ph">
+      <h1>Modifier l'avis</h1>
+      <a href="?page=reviews" class="btn btn-gray">← Retour</a>
+    </div>
+
+    <div class="fc" style="max-width:600px">
+      <form method="POST" action="">
+        <input type="hidden" name="action" value="save_review">
+        <input type="hidden" name="id" value="<?= h($editReview['id']) ?>">
+        <div class="fg">
+
+          <div class="fg-group">
+            <label for="rv-first">Prénom *</label>
+            <input type="text" id="rv-first" name="firstName" required
+                   value="<?= h($editReview['firstName'] ?? '') ?>">
+          </div>
+
+          <div class="fg-group">
+            <label for="rv-last">Nom *</label>
+            <input type="text" id="rv-last" name="lastName" required
+                   value="<?= h($editReview['lastName'] ?? '') ?>">
+          </div>
+
+          <div class="fg-group">
+            <label for="rv-city">Ville (optionnel)</label>
+            <input type="text" id="rv-city" name="city"
+                   value="<?= h($editReview['city'] ?? '') ?>" placeholder="Cannes">
+          </div>
+
+          <div class="fg-group">
+            <label for="rv-rating">Note (1–5)</label>
+            <input type="number" id="rv-rating" name="rating" min="1" max="5" required
+                   value="<?= h((string)($editReview['rating'] ?? 5)) ?>">
+          </div>
+
+          <div class="fg-group full">
+            <label for="rv-comment">Commentaire *</label>
+            <textarea id="rv-comment" name="comment" required><?= h($editReview['comment'] ?? '') ?></textarea>
+          </div>
+
+        </div>
+        <div class="fa">
+          <button type="submit" class="btn btn-orange" style="padding:.7rem 1.75rem;font-size:.95rem">
+            Enregistrer les modifications
+          </button>
+          <a href="?page=reviews" class="btn btn-gray" style="padding:.7rem 1.25rem;font-size:.95rem">Annuler</a>
+        </div>
+      </form>
+    </div>
+
   <?php endif; ?>
 
 </main>
+
+<!-- Delete review modal -->
+<div class="modal" id="delRevModal">
+  <div class="mc">
+    <h3>Supprimer l'avis ?</h3>
+    <p id="delRevText">Cette action est irréversible.</p>
+    <form method="POST" action="">
+      <input type="hidden" name="action" value="delete_review">
+      <input type="hidden" name="id" id="delRevId">
+      <div class="mc-actions">
+        <button type="submit" class="btn btn-orange" style="background:#dc2626">Supprimer définitivement</button>
+        <button type="button" class="btn btn-gray" onclick="closeDelRev()">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Delete confirmation modal -->
 <div class="modal" id="delModal">
@@ -677,6 +937,19 @@ function closeDel() {
 }
 document.getElementById('delModal').addEventListener('click', function(e) {
   if (e.target === this) closeDel();
+});
+
+function openDelRev(btn) {
+  document.getElementById('delRevId').value = btn.dataset.id;
+  document.getElementById('delRevText').textContent =
+    'L\'avis de "' + btn.dataset.name + '" sera supprimé définitivement.';
+  document.getElementById('delRevModal').classList.add('on');
+}
+function closeDelRev() {
+  document.getElementById('delRevModal').classList.remove('on');
+}
+document.getElementById('delRevModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDelRev();
 });
 </script>
 

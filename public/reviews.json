@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rev001",
+    "firstName": "Sophie",
+    "lastName": "Martin",
+    "rating": 5,
+    "comment": "Une soirée absolument magique sur le pont du bateau. Le coucher de soleil, la musique... inoubliable.",
+    "city": "Cannes",
+    "status": "approved",
+    "date": "2025-05-10"
+  },
+  {
+    "id": "rev002",
+    "firstName": "Thomas",
+    "lastName": "Laurent",
+    "rating": 5,
+    "comment": "L'organisation était parfaite, l'ambiance incroyable. On reviendra sans hésiter !",
+    "city": "Paris",
+    "status": "approved",
+    "date": "2025-04-22"
+  },
+  {
+    "id": "rev003",
+    "firstName": "Camille",
+    "lastName": "Rousseau",
+    "rating": 4,
+    "comment": "JetSetBoat c'est vraiment autre chose. Luxe, bonne humeur et professionnalisme au rendez-vous.",
+    "city": "Monaco",
+    "status": "pending",
+    "date": "2025-05-15"
+  }
+]
